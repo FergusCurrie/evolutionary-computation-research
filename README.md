@@ -3,17 +3,48 @@ Collection of work for my AIML research. Multi-objective ensembles. Where I can 
 
 # File Structure
 |---data
-    |---raw
-    |---processed
-|--models
-|--notebooks
-|--references
-|--reporting
-|--src
+    |---datasets
+    |---frames
+    |---models
+|--code
+    |---experiments
+    |---neuralnetwork
+        |---architechtures
+        |---losses
+        |---training
+    |---visualisation
+    |---notebooks
 |--venv
 
+# Experiements and subexperiments
+subexperiments use identical architechture and simply tune hyper-parameters
+experiments use different architechture. 
+should error catch trying to rerun experiments that have already been run
 
-# Enviroment Stuff: 
+# Naming conventions 
+
+models : model_{experiement}_{subexperiment}_{n}
+experiement info : expinfo_{experiement}
+subexperiment info : expinfo_{experiement}_{subexperiment}
+
+# Visualisation
+all visualisation should save to a temp folder. it's so easy to load and generate. 
+
+
+
+# New Enviroment ... CONDA
+This code is going to mainly be run on the university grid. This means the enviroment needs to be runnable from there,
+as they are on an older version the enviroment system needs to be able to control this. This code base now uses 
+Python3.8.12
+
+
+https://docs.conda.io/projects/conda/en/4.6.0/_downloads/52a95608c49671267e40c689e0bc00ca/conda-cheatsheet.pdf
+
+conda list --explicit > environment.txt
+
+
+
+# Enviroment Stuff (OLD): 
 
 https://towardsdatascience.com/virtual-environments-104c62d48c54#:~:text=A%20virtual%20environment%20is%20a,a%20system%2Dwide%20Python).
 

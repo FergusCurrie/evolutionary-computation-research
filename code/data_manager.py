@@ -27,7 +27,7 @@ def get_cleveland() -> pd.DataFrame:
     return data
 
 
-def pandas_to_numpy_x_y(df: pd.DataFrame) -> tuple[np.array, np.array]:
+def pandas_to_numpy_x_y(df: pd.DataFrame) -> tuple([np.array, np.array]):
     """
     Get pandas numpy and return as xy
 

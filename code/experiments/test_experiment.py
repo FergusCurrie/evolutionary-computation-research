@@ -1,10 +1,10 @@
 import pandas as pd
 
 from code.data_manager import get_cleveland, pandas_to_numpy_x_y
-from code.neuralnetwork.training.model_train import train
-from code.neuralnetwork.losses.loss_categorical_crossentropy import get_loss_categorical_crossentropy
-from code.neuralnetwork.architechtures.architechture_factory import build_architechture
-from code.neuralnetwork.architechtures.example_leaner import get_example_learner
+from code.learners.neuralnetwork.training.model_train import train
+from code.learners.neuralnetwork.losses.loss_categorical_crossentropy import get_loss_categorical_crossentropy
+from code.learners.neuralnetwork.architechtures.architechture_factory import build_architechture
+from code.learners.neuralnetwork.architechtures.example_leaner import get_example_learner
 import tensorflow as tf
 import numpy as np
 import keras
@@ -12,7 +12,7 @@ import keras
 # model = keras.models.load_model('path/to/location')
 
 EXPERIMENT_NAME = "test"
-
+py
 
 def run_experiment_test():
 
