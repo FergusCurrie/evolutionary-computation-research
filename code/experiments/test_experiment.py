@@ -1,6 +1,6 @@
 import pandas as pd
 
-from code.data_manager import get_cleveland, pandas_to_numpy_x_y
+from code.data_processing import get_cleveland, pandas_to_numpy_x_y
 from code.learners.neuralnetwork.training.model_train import train
 from code.learners.neuralnetwork.losses.loss_categorical_crossentropy import get_loss_categorical_crossentropy
 from code.learners.neuralnetwork.architechtures.architechture_factory import build_architechture

@@ -32,38 +32,28 @@ all visualisation should save to a temp folder. it's so easy to load and generat
 
 
 
-# New Enviroment ... CONDA
-This code is going to mainly be run on the university grid. This means the enviroment needs to be runnable from there,
-as they are on an older version the enviroment system needs to be able to control this. This code base now uses 
-Python3.8.12
+# New Enviroment 
+
+This code is going to mainly be run on the university grid. As installing onto uni systems is difficult
+it makes sense to write this repo in thier python version (3.8.12) and only using their libraries. I use a conda
+enviroment with python3.8.12, and have a package list 'package.txt' of all packages on uni machine. If I ever have 
+the need to run on another computer I store my environment in enviroment.txt. 
+
 
 
 https://docs.conda.io/projects/conda/en/4.6.0/_downloads/52a95608c49671267e40c689e0bc00ca/conda-cheatsheet.pdf
 
 conda list --explicit > environment.txt
 
+conda list --explicit
+
+conda install <package_name>=<version> e.g. conda install numpy=1.20.3
+
+numpy=1.20.3
+pandas=1.2.4
+matplotlib=3.4.2
+scikit-learn=0.22.1
 
 
-# Enviroment Stuff (OLD): 
 
-https://towardsdatascience.com/virtual-environments-104c62d48c54#:~:text=A%20virtual%20environment%20is%20a,a%20system%2Dwide%20Python).
 
-1. Create $ python3 -m venv venv/
-
-2. Activate $ source venv/bin/activate 
-    2. Deactivate 
-
-3. Show packages $ pip3 list
-
-4. Install packages $ pip3 install 
-
-5. Freeze current package state $ pip3 freeze > requirements.txt
-    5. Now we have a text file of the enviroment (which we can install from)
-
-6. And loading enviroment with $ pip install -r requirements.txt
-
-Any issues with enviroment, re-install it: 
-
-$ rm -r venv/                           # Nukes the old environment
-$ python3 -m venv venv/                 # Makes a blank new one
-$ pip install -r requirements.txt       # Re-installs dependencies
