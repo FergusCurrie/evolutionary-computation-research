@@ -4,32 +4,9 @@ from deap.algorithms import varAnd
 import numpy as np
 from deap import algorithms
 import operator
-
-
-def my_if(a, b, c):
-    if a > 0:
-        return b
-    return c
-
-def protectedDiv(left, right):
-    try:
-        return left / right
-    except ZeroDivisionError:
-        return 10
-
-def get_pset(num_args):
-    pset = gp.PrimitiveSet("MAIN", num_args)
-    pset.addPrimitive(operator.add, 2)
-    pset.addPrimitive(operator.sub, 2)
-    pset.addPrimitive(operator.mul, 2)
-    pset.addPrimitive(protectedDiv, 2)
-    pset.addPrimitive(my_if, 3)
-    for n in range(num_args):
-        pset.renameArguments(ARG0=f'x{n}')
-    pset.addTerminal(3)
-    pset.addTerminal(2)
-    pset.addTerminal(1)
-    return pset
+from code.learners.EC.deap_extra import my_if, protectedDiv, get_pset, get_stats, update_fitness
+from code.metrics.classification_metrics import *
+from code.member_selection.offEEL import offEEL
 
 def get_toolbox(pset, max_depth, X, y):
     toolbox = base.Toolbox()
@@ -46,20 +23,6 @@ def get_toolbox(pset, max_depth, X, y):
     toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=max_depth))
     return toolbox
 
-def calculate_confusion_matrix(y_true, y_pred):
-    confusion_matrix = [[0,0],[0,0]] # first index is 1=true/0=false, second is 1=positive, 0=negative
-    for yt, yp in zip(y_true, y_pred):
-        if yt == 0:
-            if yp == 1:
-                confusion_matrix[0][1] += 1
-            if yp == 0:
-                confusion_matrix[1][0] += 1
-        elif yt == 1:
-            if yp == 1:
-                confusion_matrix[1][1] += 1
-            elif yp == 0:
-                confusion_matrix[0][0] += 1
-    return confusion_matrix
 
 def single_pred(x, f):
     yp = 1
@@ -91,46 +54,12 @@ def fitness_calculation(individual, toolbox, X, y):
     class_1_acc = accuracy(confusion_matrix)
     return class_0_acc, class_1_acc,
 
-
-def get_stats():
-
-    stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
-    stats_size = tools.Statistics(len)
-    mstats = tools.MultiStatistics(fitness=stats_fit, size=stats_size)
-    mstats.register("avg", np.mean)
-    mstats.register("min", np.min)
-    return mstats
-
 def member_evaluation(individual, toolbox, X, y):
     func = toolbox.compile(expr=individual)
     ypred = make_predictions(X, func)
     confusion_matrix = calculate_confusion_matrix(y, ypred)
     acc = accuracy(confusion_matrix)
     return acc
-
-
-def member_selection(population, toolbox, X, y):
-    # First sort population 
-    sorted_pop = sorted(population, key=lambda e : member_evaluation(individual=e, toolbox=toolbox,X=X,y=y), reverse=True) # DESCENDING 
-
-    # Now loop through an 
-    L = []
-    best = [-1, -1] # ind, acc
-    for i in range(len(sorted_pop)-1):
-        L = sorted_pop[0:i+1]
-        F = [toolbox.compile(expr=individual) for individual in L]
-        ypred = []
-        for x in X:
-            _yp = 0
-            preds = np.array([single_pred(x, f) for f in F])
-            if len(preds[preds == 0]) < len(preds[preds == 1]):
-                _yp = 1
-            ypred.append(_yp)
-        confusion_matrix = calculate_confusion_matrix(y, ypred)
-        acc = accuracy(confusion_matrix)
-        if best[1] < acc:
-            best = [i, acc]
-    return population[0:best[0]+1]
 
 
 
@@ -160,53 +89,28 @@ def gp_mo_member_generation(X,y, p_size, max_depth, pc, pm, ngen, verbose=False)
     # Initalise tool box
     toolbox = get_toolbox(pset, max_depth, X, y)
 
-    #species = [toolbox.species() for _ in range(2)]
-
-    # Initalise stats
-    mstats = get_stats()
-
     # Run GP
     pop = toolbox.population(n=p_size)
 
-
     # Init pop fitness
-    # Update fitness in population
-    invalid_ind = [ind for ind in pop if not ind.fitness.valid]
-    fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
-    for ind, fit in zip(invalid_ind, fitnesses):
-        ind.fitness.values = fit
-
+    update_fitness(pop, toolbox)
 
     # Evolution process 
     for gen in range(1, ngen + 1):
         if verbose:
             print(f'gen={gen}')
+
         # Select the next generation individuals
         offspring_a = toolbox.select(pop, p_size)
 
         # Vary the pool of individuals
         offspring_a = varAnd(offspring_a, toolbox, pc, pm)
-        #offspring_a = algorithms.varOr(pop, toolbox, cxpb=pc, mutpb=pm)
 
         # Update fitness in population
-        invalid_ind = [ind for ind in offspring_a if not ind.fitness.valid]
-        fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
-        for ind, fit in zip(invalid_ind, fitnesses):
-            ind.fitness.values = fit
-
-        #[print(ind.fitness.valid) for ind in offspring_a]
+        update_fitness(pop, toolbox)
 
         # Replace the current population by the offspring
-        #pop[:] = offspring_a + pop
         pop = toolbox.select(offspring_a + pop, k=p_size) # something to do with having 200 here. 
 
-    ensemble = member_selection(pop, toolbox, X, y)
+    ensemble = offEEL(pop, toolbox, X, y)
     return [toolbox.compile(expr=ind) for ind in ensemble]
-
-    # run over 
-
-
-    # Compile best function, apply to test and print
-    #funca = toolbox.compile(expr=CV[0])
-
-

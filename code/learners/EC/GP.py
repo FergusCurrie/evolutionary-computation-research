@@ -12,34 +12,7 @@ import pandas as pd
 import random
 
 from code.metrics.classification_metrics import *
-
-
-def my_if(a, b, c):
-    if a > 0:
-        return b
-    return c
-
-def protectedDiv(left, right):
-    if right <= 0:
-        return 9999999 # val?
-    try:
-        return left / right
-    except ZeroDivisionError:
-        return 9999999 # val
-
-def get_pset(num_args):
-    pset = gp.PrimitiveSet("MAIN", num_args)
-    pset.addPrimitive(operator.add, 2)
-    pset.addPrimitive(operator.sub, 2)
-    pset.addPrimitive(operator.mul, 2)
-    pset.addPrimitive(protectedDiv, 2)
-    pset.addPrimitive(my_if, 3)
-    for n in range(num_args):
-        pset.renameArguments(ARG0=f'x{n}')
-    pset.addTerminal(3)
-    pset.addTerminal(2)
-    pset.addTerminal(1)
-    return pset
+from code.learners.EC.deap_extra import my_if, protectedDiv, get_pset, get_stats
 
 def get_toolbox(pset, t_size, max_depth, X, y):
     toolbox = base.Toolbox()
@@ -76,19 +49,7 @@ def fitness_calculation(individual, toolbox, X, y, w=0.5):
     return ave(confusion_matrix, w),
 
 
-
-def get_stats():
-
-    stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
-    stats_size = tools.Statistics(len)
-    mstats = tools.MultiStatistics(fitness=stats_fit, size=stats_size)
-    mstats.register("avg", np.mean)
-    mstats.register("min", np.min)
-    return mstats
-
 def gp_member_generation(X,y, p_size, max_depth, pc, pm, ngen, t_size,verbose=False):
-
-
     # Initalise primitives
     pset = get_pset(num_args=X.shape[1])
 

@@ -28,7 +28,7 @@ if 0:
     print(f'final test accuracy is = {acc}')
 
 if 1:
-    ensemble = gp_member_generation(X_train,y_train, p_size=500, max_depth=8, pc=0.6, pm=0.4, ngen=50, t_size=7,verbose=True)
+    ensemble = gp_member_generation(X_train,y_train, p_size=50, max_depth=8, pc=0.6, pm=0.4, ngen=5, t_size=7,verbose=True)
 
     ypred = ensemble_voting(X_train, ensemble)
     confusion_matrix = calculate_confusion_matrix(y_train, ypred)
