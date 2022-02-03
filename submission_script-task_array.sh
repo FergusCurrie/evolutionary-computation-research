@@ -66,7 +66,7 @@ ls -la
 #
 # Copy the input file to the local directory
 #
-cp /vol/grid-solar/sgeusers/currieferg/krb_tkt_flow.JPG .
+cp /vol/grid-solar/sgeusers/currieferg/* . # copy everything? 
 echo ==WHATS THERE HAVING COPIED STUFF OVER AS INPUT==
 ls -la 
 # 

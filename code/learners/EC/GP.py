@@ -12,7 +12,8 @@ import pandas as pd
 import random
 
 from code.metrics.classification_metrics import *
-from code.learners.EC.deap_extra import my_if, protectedDiv, get_pset, get_stats
+from code.learners.EC.deap_extra import get_pset, make_predictions
+
 
 def get_toolbox(pset, t_size, max_depth, X, y):
     toolbox = base.Toolbox()
@@ -29,18 +30,9 @@ def get_toolbox(pset, t_size, max_depth, X, y):
     toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=max_depth))
     return toolbox
 
-def make_predictions(_X, f):
-    ypred = []
-    for x in _X:
-        yp = 1
-        if f(*x) < 0:
-            yp = 0
-        ypred.append(yp)
-    return np.array(ypred)
-
 def fitness_calculation(individual, toolbox, X, y, w=0.5):
     """
-    Fitness function. Compiles tree then calls mse function
+    Fitness function. Compiles GP then tests
     """
     func = toolbox.compile(expr=individual)
     # Calculated the 'ave' function
@@ -49,7 +41,16 @@ def fitness_calculation(individual, toolbox, X, y, w=0.5):
     return ave(confusion_matrix, w),
 
 
-def gp_member_generation(X,y, p_size, max_depth, pc, pm, ngen, t_size,verbose=False):
+def gp_member_generation(X,y, params):
+    # unpack parameters
+    max_depth = params["max_depth"]
+    pc = params["pc"]
+    pm = params["pm"]
+    ngen = params["ngen"]
+    p_size = params['p_size']
+    verbose = params["verbose"]
+    t_size = params['t_size']
+
     # Initalise primitives
     pset = get_pset(num_args=X.shape[1])
 
@@ -60,17 +61,30 @@ def gp_member_generation(X,y, p_size, max_depth, pc, pm, ngen, t_size,verbose=Fa
     # Initalise tool box
     toolbox = get_toolbox(pset, t_size, max_depth, X, y)
 
-    # Initalise stats
-    mstats = get_stats()
-
     # Run GP
     pop = toolbox.population(n=p_size)
 
     halloffame = tools.HallOfFame(1)
 
+    # Stats
+    stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
+    stats_size = tools.Statistics(len)
+    mstats = tools.MultiStatistics(fitness=stats_fit, size=stats_size)
+    mstats.register("avg", np.mean)
+    mstats.register("std", np.std)
+    mstats.register("min", np.min)
+    mstats.register("max", np.max)
+    logbook = tools.Logbook()
+    logbook.header = ['gen', 'nevals'] + (mstats.fields if mstats else [])
+
     # Evolution process 
     for gen in range(1, ngen + 1):
-        print(f'gen={gen}')
+        
+        #if verbose:
+            #print(f'Generation {gen}/{ngen}')
+        
+        
+
         # Select the next generation individuals
         offspring_a = toolbox.select(pop, len(pop))
 
@@ -91,10 +105,13 @@ def gp_member_generation(X,y, p_size, max_depth, pc, pm, ngen, t_size,verbose=Fa
         # Replace the current population by the offspring
         pop[:] = offspring_a
 
-    return [toolbox.compile(ind) for ind in pop]
+        # Append the current generation statistics to the logbook
+        record = mstats.compile(pop) if mstats else {}
+        logbook.record(gen=gen, nevals=len(invalid_ind), **record)
+        if verbose:
+            print(logbook.stream)
 
-    # Compile best function, apply to test and print
-    
-    # funca = toolboxa.compile(expr=CV[0])
+
+    return [toolbox.compile(ind) for ind in pop]
 
 

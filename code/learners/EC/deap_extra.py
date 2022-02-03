@@ -8,6 +8,8 @@ from deap.algorithms import varAnd
 import math
 import operator 
 import numpy as np
+import warnings
+warnings.simplefilter("ignore")
 
 def update_fitness(pop, toolbox):
     invalid_ind = [ind for ind in pop if not ind.fitness.valid]
@@ -47,3 +49,22 @@ def get_stats():
     mstats.register("avg", np.mean)
     mstats.register("min", np.min)
     return mstats
+
+
+def make_predictions(_X, f):
+    """Uses a function to make a thresholded prediction across a given 2d dataset. For binary data 
+
+    Args:
+        _X (np.array): dataset
+        f (callable): function
+
+    Returns:
+        np.array: array of predictions 
+    """
+    ypred = []
+    for x in _X:
+        yp = 1
+        if f(*x) < 0:
+            yp = 0
+        ypred.append(yp)
+    return np.array(ypred)

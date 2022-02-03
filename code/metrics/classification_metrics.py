@@ -1,25 +1,11 @@
 import numpy as np
+from sklearn.metrics import accuracy_score, confusion_matrix
 
-def calculate_confusion_matrix(y_true, y_pred):
-    confusion_matrix = [[0,0],[0,0]] # first index is 1=true/0=false, second is 1=positive, 0=negative
-    for yt, yp in zip(y_true, y_pred):
-        if yt == 0:
-            if yp == 1:
-                confusion_matrix[0][1] += 1
-            if yp == 0:
-                confusion_matrix[1][0] += 1
-        elif yt == 1:
-            if yp == 1:
-                confusion_matrix[1][1] += 1
-            elif yp == 0:
-                confusion_matrix[0][0] += 1
-    return confusion_matrix
+def accuracy(y_true, y_pred):
+    return accuracy_score(y_true, y_pred)
 
-def accuracy(cm):
-    """confusion matrix # first index is 1=true/0=false, second is 1=positive, 0=negative """
-    return (cm[1][0] + cm[1][1]) / (cm[0][0] + cm[1][0] + cm[0][1] + cm[1][1])
 
-def ensemble_voting(X,F):
+"""def ensemble_voting(X, F):
     ypred = []
     for x in X:
         _yp = 0
@@ -27,19 +13,35 @@ def ensemble_voting(X,F):
         if len(preds[preds == 0]) < len(preds[preds == 1]):
             _yp = 1
         ypred.append(_yp)
-    return ypred
+    return ypred"""
 
-def single_pred(x, f): # thresholding
-    yp = 1
-    if f(*x) < 0:
-        yp = 0
-    return yp
+def calculate_confusion_matrix(y_true, y_pred, verbose=False):
+    return confusion_matrix(y_true, y_pred)
 
-def tpr(confusion_matrix):
-    return confusion_matrix[1][1] / (confusion_matrix[1][1] + confusion_matrix[0][0])
 
-def tnr(confusion_matrix):
-    return confusion_matrix[1][0] / (confusion_matrix[1][0] + confusion_matrix[0][1])
+def tpr(cm):
+    if len(cm.ravel()) == 0: # check for per class case where none of a class exists
+        return 0
+    tn, fp, fn, tp = cm.ravel()
+    return tp / (tp + fn)
 
-def ave(confusion_matrix, w):
-    return (w * tpr(confusion_matrix)) + ((1-w) * tnr(confusion_matrix))
+
+def tnr(cm):
+    if len(cm.ravel()) == 0: # check for per class case where none of a class exists
+        return 0
+    tn, fp, fn, tp = cm.ravel()
+    return tn / (tn + fp)
+
+
+def ave(cm, w):
+    return (w * tpr(cm)) + ((1 - w) * tnr(cm))
+
+
+def binary_metric(ytrue, ypred):
+    # full
+    full_cm = calculate_confusion_matrix(ytrue, ypred)
+    full_acc = accuracy(ytrue, ypred)
+    full_tpr = tpr(full_cm)
+    full_tnr = tnr(full_cm)
+
+    return [full_acc, full_tpr, full_tnr]
