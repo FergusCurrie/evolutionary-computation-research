@@ -66,9 +66,15 @@ ls -la
 #
 # Copy the input file to the local directory
 #
-cp /vol/grid-solar/sgeusers/currieferg/* . # copy everything? 
+cp -r /vol/grid-solar/sgeusers/currieferg/* . # copy everything? 
 echo ==WHATS THERE HAVING COPIED STUFF OVER AS INPUT==
 ls -la 
+#
+# Move into implementations
+#
+if [ -d /local/tmp/currieferg/$JOB_ID.$SGE_TASK_ID/Implementations ]; then
+        cd /local/tmp/currieferg/$JOB_ID.$SGE_TASK_ID/Implementations 
+fi
 # 
 # Note that we need the full path to this utility, as it is not on the PATH
 #
