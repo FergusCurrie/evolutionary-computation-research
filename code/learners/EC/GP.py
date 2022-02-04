@@ -106,6 +106,7 @@ def gp_member_generation(X,y, params):
         pop[:] = offspring_a
 
         # Append the current generation statistics to the logbook
+        print(pop)
         record = mstats.compile(pop) if mstats else {}
         logbook.record(gen=gen, nevals=len(invalid_ind), **record)
         if verbose:

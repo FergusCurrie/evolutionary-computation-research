@@ -72,7 +72,7 @@ ls -la
 # 
 # Note that we need the full path to this utility, as it is not on the PATH
 #
-/usr/pkg/bin/convert krb_tkt_flow.JPG krb_tkt_flow.png
+python grid_run_a_task_wrapper.py $JOB_ID $SGE_TASK_ID
 #
 echo ==AND NOW, HAVING DONE SOMTHING USEFUL AND CREATED SOME OUTPUT==
 ls -la
@@ -81,7 +81,6 @@ ls -la
 #  noting that we need to distinguish between the TASKS
 #  (really should check that directory exists too, but this is just a test)
 #
-mkdir -p /vol/grid-solar/sgeusers/currieferg/$JOB_ID
-cp krb_tkt_flow.png  /vol/grid-solar/sgeusers/currieferg/$JOB_ID/krb_tkt_flow.$SGE_TASK_ID.png
+cp task_store/*.csv /vol/grid-solar/sgeusers/currieferg/Implementations/task_store/
 #
 echo "Ran through OK"

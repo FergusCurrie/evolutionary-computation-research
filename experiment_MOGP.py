@@ -5,7 +5,6 @@ import sys
 sys.path.append("/")
 
 from code.learners.EC.MOGP import gp_mo_member_generation
-from code.learners.EC.GP import gp_member_generation
 from code.member_selection.offEEL import offEEL
 from code.learners.randomforest.randomforests import adaboost_classifier_member_generation
 from code.learners.randomforest.randomforests import random_forest_classifier_member_generation
@@ -53,11 +52,11 @@ def get_experiment():
 
     # MODELS ###############################################################################################################
     # GP
-    MOGP_params_1 = {"p_size": 500, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 50, "verbose": False}
+    MOGP_params_1 = {"p_size": 500, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 2, "verbose": False}
     MOGP_params = [MOGP_params_1]
     MOGP_model = Model(
         member_generation_func=gp_mo_member_generation,
-        member_selection_func=offEEL,
+        member_selection_func=None, # offEEL
         decision_fusion_func=binary_voting,
         params=MOGP_params,
         pred_func=GP_predict,

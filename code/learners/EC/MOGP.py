@@ -4,8 +4,10 @@ from deap.algorithms import varAnd
 import numpy as np
 from deap import algorithms
 import operator
-from code.learners.EC.deap_extra import get_pset, update_fitness, make_predictions
+from code.learners.EC.deap_extra import get_pset, make_predictions
 from code.metrics.classification_metrics import *
+
+# https://github.com/DEAP/deap/blob/master/doc/api/tools.rst
 
 
 def get_toolbox(pset, max_depth, X, y):
@@ -87,13 +89,32 @@ def gp_mo_member_generation(X, y, params):
     # Run GP
     pop = toolbox.population(n=p_size)
 
+    # Stats
+    mstats = tools.Statistics(lambda ind: ind.fitness.values)
+    mstats.register("avg", np.mean, axis=0)
+    mstats.register("min", np.min, axis=0)
+    mstats.register("max", np.max, axis=0)
+
+    logbook = tools.Logbook()
+    logbook.header = "gen", "evals", "std", "min", "avg", "max"
+
+
     # Init pop fitness
-    update_fitness(pop, toolbox)
+    invalid_ind = [ind for ind in pop if not ind.fitness.valid]
+    fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
+    for ind, fit in zip(invalid_ind, fitnesses):
+        ind.fitness.values = fit
+
+    record = mstats.compile(pop)
+    logbook.record(gen=0, evals=len(invalid_ind), **record)
+    #print(logbook.stream)
+
+    #rint('MOGP')
 
     # Evolution process
     for gen in range(1, ngen + 1):
-        if verbose:
-            print(f"gen={gen}")
+
+        #print(f'gen = {gen}')
 
         # Select the next generation individuals
         offspring_a = toolbox.select(pop, p_size)
@@ -102,11 +123,22 @@ def gp_mo_member_generation(X, y, params):
         offspring_a = varAnd(offspring_a, toolbox, pc, pm)
 
         # Update fitness in population
-        update_fitness(pop, toolbox)
+        invalid_ind = [ind for ind in pop if not ind.fitness.valid]
+        fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
+        for ind, fit in zip(invalid_ind, fitnesses):
+            ind.fitness.values = fit
 
         # Replace the current population by the offspring
-        print(len(offspring_a))
-        print(len(pop))
+        
         pop = toolbox.select(offspring_a + pop, k=p_size)  # something to do with having 200 here.
+
+        # Append the current generation statistics to the logbook
+        if False:
+            print(pop)
+            record = mstats.compile(pop)
+            logbook.record(gen=gen, evals=len(invalid_ind), **record)
+            if verbose:
+                print(logbook.stream)
+
 
     return [toolbox.compile(expr=ind) for ind in pop]

@@ -4,7 +4,7 @@ Args should be passed. jobid and taskid
 """
 
 from sklearn.model_selection import train_test_split
-from experiment_GP import get_experiment
+from experiment_MOGP import get_experiment
 import pandas as pd
 import sys
 import time
@@ -25,7 +25,7 @@ def select_task(experiment, taskid):
 
 nseeds = 30
 
-def run(taskid, jobid): 
+def run(jobid, taskid): 
 
     results = []
 
@@ -68,12 +68,6 @@ def run(taskid, jobid):
 
     # Saving result
     df = pd.DataFrame(data=results, columns = ['training', 'seed', 'time', 'full_acc', 'full_tpr', 'full_tnr'])
-    df.to_csv(f"task_store/{name}_task_{taskid}_{dataset_name}.csv", index=False)
+    df.to_csv(f"task_store/{name}_job_{jobid}_task_{taskid}_{dataset_name}.csv", index=False)
 
 
-
-
-#jobid = int(sys.argv[1])
-#taskid = int(sys.argv[2])
-
-#run(taskid, jobid)

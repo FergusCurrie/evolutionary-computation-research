@@ -11,11 +11,6 @@ import numpy as np
 import warnings
 warnings.simplefilter("ignore")
 
-def update_fitness(pop, toolbox):
-    invalid_ind = [ind for ind in pop if not ind.fitness.valid]
-    fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
-    for ind, fit in zip(invalid_ind, fitnesses):
-        ind.fitness.values = fit
 
 def my_if(a, b, c):
     if a > 0:
