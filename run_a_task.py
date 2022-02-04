@@ -26,6 +26,14 @@ def select_task(experiment, taskid):
 nseeds = 30
 
 def run(jobid, taskid): 
+    """
+
+    Careful. Grid can't handle a task id of 1. Therefore we refer to a task from 1, but is index from 0. 
+
+    Args:
+        jobid ([type]): [description]
+        taskid ([type]): [description]
+    """
 
     results = []
 
@@ -35,7 +43,8 @@ def run(jobid, taskid):
     print(f'Running {name}')
 
     # Select correct task
-    model, dataset_name, param = select_task(experiment, taskid)
+    # Careful. Grid can't handle a task id of 1. Therefore we refer to a task from 1, but is index from 0. 
+    model, dataset_name, param = select_task(experiment, taskid-1)
     dataset = experiment["datasets"][dataset_name]
 
     # Select the active parameter
