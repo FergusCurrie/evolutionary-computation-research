@@ -17,10 +17,11 @@ class Model:
         self.active_param = None # ?
         self.ensemble = None #self.run(X, y)
         self.pred_func = pred_func
+        self.history = None
 
     def member_generation(self, X, y):
         # Generate ensemble 
-        self.ensemble = self.member_generation_func(X, y, self.active_param) # an ensemble should be a list of functions 
+        self.ensemble, self.history = self.member_generation_func(X, y, self.active_param) # an ensemble should be a list of functions 
 
 
         # Convert ensemble into learner obkjects 

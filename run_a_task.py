@@ -58,7 +58,7 @@ def run(jobid, taskid):
     for i in range(30):
         start = time.time()
         seed = 169 * i
-        print(f'Run number {i}/{nseeds}  ... seed = {seed} of {dataset_name}')
+        print(f'Run number {i}/{30}  ... seed = {seed} of {dataset_name}')
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=seed, stratify=y)
 
         # Train it... member_generation -> member_selection
@@ -75,7 +75,10 @@ def run(jobid, taskid):
         results.append([True] + [seed] + [end - start] + training_results)
         results.append([False] + [seed] + [end - start] + test_results)
 
-    # Saving result
+        # Save history
+        model.history.to_csv(f'task_store/history_{i}_{name}_job_{jobid}_task_{taskid}_{dataset_name}.csv')
+
+    # Saving result - and History
     df = pd.DataFrame(data=results, columns = ['training', 'seed', 'time', 'full_acc', 'full_tpr', 'full_tnr'])
     df.to_csv(f"task_store/{name}_job_{jobid}_task_{taskid}_{dataset_name}.csv", index=False)
 
