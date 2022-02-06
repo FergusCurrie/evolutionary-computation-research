@@ -55,7 +55,7 @@ def run(jobid, taskid):
     y = dataset[1]
 
     # Run for 30 seeds
-    for i in range(2):
+    for i in range(30):
         start = time.time()
         seed = 169 * i
         print(f'Run number {i}/{30}  ... seed = {seed} of {dataset_name}')
