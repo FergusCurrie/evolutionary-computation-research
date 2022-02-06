@@ -16,7 +16,7 @@ def offEEL(ensemble : list, X : np.array, y : np.array, decision_fusion_func : C
     for i in range(len(sorted_ensemble)-1):
         F = sorted_ensemble[0:i+1]
         
-        raw_ypred = np.array([learner.predict(X) for learner in ensemble])
+        raw_ypred = np.array([learner.predict(X) for learner in F])
 
         # Then calculate true predictions with decision function
         ypred = decision_fusion_func(raw_ypred)
@@ -27,4 +27,4 @@ def offEEL(ensemble : list, X : np.array, y : np.array, decision_fusion_func : C
 
 
 
-    return ensemble[0:best[0]+1]
+    return sorted_ensemble[0:best[0]+1]

@@ -40,8 +40,9 @@ def ave(cm, w):
 def binary_metric(ytrue, ypred):
     # full
     full_cm = calculate_confusion_matrix(ytrue, ypred)
+    tn, fp, fn, tp = full_cm.ravel()
     full_acc = accuracy(ytrue, ypred)
-    full_tpr = tpr(full_cm)
-    full_tnr = tnr(full_cm)
+    majority_acc = accuracy(ytrue[ytrue == 1], ypred[ytrue == 1])
+    minority_acc = accuracy(ytrue[ytrue == 0], ypred[ytrue == 0])
 
-    return [full_acc, full_tpr, full_tnr]
+    return [full_acc, majority_acc, minority_acc, tn, fp, fn, tp]

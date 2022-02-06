@@ -55,7 +55,7 @@ def run(jobid, taskid):
     y = dataset[1]
 
     # Run for 30 seeds
-    for i in range(30):
+    for i in range(2):
         start = time.time()
         seed = 169 * i
         print(f'Run number {i}/{30}  ... seed = {seed} of {dataset_name}')
@@ -79,7 +79,7 @@ def run(jobid, taskid):
         model.history.to_csv(f'task_store/history_{i}_{name}_job_{jobid}_task_{taskid}_{dataset_name}.csv')
 
     # Saving result - and History
-    df = pd.DataFrame(data=results, columns = ['training', 'seed', 'time', 'full_acc', 'full_tpr', 'full_tnr'])
+    df = pd.DataFrame(data=results, columns = ['training', 'seed', 'time', 'full_acc', 'majority_acc', 'minority_acc', 'tn', 'fp', 'fn', 'tp'])
     df.to_csv(f"task_store/{name}_job_{jobid}_task_{taskid}_{dataset_name}.csv", index=False)
 
 
