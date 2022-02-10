@@ -19,9 +19,9 @@ class Model:
         self.pred_func = pred_func
         self.history = None
 
-    def member_generation(self, X, y):
+    def member_generation(self, X, y, seed):
         # Generate ensemble 
-        self.ensemble, self.history = self.member_generation_func(X, y, self.active_param) # an ensemble should be a list of functions 
+        self.ensemble, self.history = self.member_generation_func(X, y, self.active_param, seed) # an ensemble should be a list of functions 
 
 
         # Convert ensemble into learner obkjects 

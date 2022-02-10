@@ -4,7 +4,7 @@ Args should be passed. jobid and taskid
 """
 
 from sklearn.model_selection import train_test_split
-from experiment_MOGP import get_experiment
+from experiment_OrMOGP import get_experiment
 import pandas as pd
 import sys
 import time
@@ -61,25 +61,32 @@ def run(jobid, taskid):
         print(f'Run number {i}/{30}  ... seed = {seed} of {dataset_name}')
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=seed, stratify=y)
 
-        # Train it... member_generation -> member_selection
-        model.member_generation(X_train, y_train)
-        model.member_selection(X_train, y_train)
-
-        # Evaluation
+        # Member generation 
+        model.member_generation(X_train, y_train, seed)
+        end = time.time()
+        # Evaluation - post generation
         metrics = experiment["metrics"]
         training_results = model.ensemble_evaluation(X_train, y_train, metrics)
         test_results = model.ensemble_evaluation(X_test, y_test, metrics) # comes back as [[training, seed , tpr, ..]]
+        results.append([True] + [True] + [seed] + [end - start] + training_results)
+        results.append([True] + [False] + [seed] + [end - start] + test_results)
 
+        # Member Selection
+        start = time.time()
+        model.member_selection(X_train, y_train)
         end = time.time()
-
-        results.append([True] + [seed] + [end - start] + training_results)
-        results.append([False] + [seed] + [end - start] + test_results)
+        # Evaluation - member selection 
+        metrics = experiment["metrics"]
+        training_results = model.ensemble_evaluation(X_train, y_train, metrics)
+        test_results = model.ensemble_evaluation(X_test, y_test, metrics) # comes back as [[training, seed , tpr, ..]]
+        results.append([False] + [True] + [seed] + [end - start] + training_results)
+        results.append([False] + [False] + [seed] + [end - start] + test_results)
 
         # Save history
         model.history.to_csv(f'task_store/history_{i}_{name}_job_{jobid}_task_{taskid}_{dataset_name}.csv')
 
     # Saving result - and History
-    df = pd.DataFrame(data=results, columns = ['training', 'seed', 'time', 'full_acc', 'majority_acc', 'minority_acc', 'tn', 'fp', 'fn', 'tp'])
+    df = pd.DataFrame(data=results, columns = ['member_generation','training', 'seed', 'time', 'full_acc', 'majority_acc', 'minority_acc', 'tn', 'fp', 'fn', 'tp'])
     df.to_csv(f"task_store/{name}_job_{jobid}_task_{taskid}_{dataset_name}.csv", index=False)
 
 

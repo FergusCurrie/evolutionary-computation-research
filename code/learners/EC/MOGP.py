@@ -7,7 +7,7 @@ import operator
 from code.learners.EC.deap_extra import get_pset, make_predictions
 from code.metrics.classification_metrics import *
 import pandas as pd 
-
+import random
 
 # https://github.com/DEAP/deap/blob/master/doc/api/tools.rst
 
@@ -52,8 +52,7 @@ def fitness_calculation(individual, toolbox, X, y):
 
 
 
-
-def gp_mo_member_generation(X, y, params):
+def gp_mo_member_generation(X, y, params, seed):
     """Generation an ensemble of GP trees using multi-objective tournament selection. 
 
     Args:
@@ -71,6 +70,8 @@ def gp_mo_member_generation(X, y, params):
     Returns:
         [list]: ensemble members... which are just lambda functions 
     """
+    random.seed(seed)
+
     max_depth = params["max_depth"]
     pc = params["pc"]
     pm = params["pm"]
@@ -82,7 +83,7 @@ def gp_mo_member_generation(X, y, params):
     pset = get_pset(num_args=X.shape[1])
 
     # Initialise GP settings
-    creator.create("FitnessMulti", base.Fitness, weights=(1.0,) * 2)  # min * n_objectives
+    creator.create("FitnessMulti", base.Fitness, weights=(1.0,) * 2)  # maximisation * n_objectives
     creator.create("Individual", gp.PrimitiveTree, fitness=creator.FitnessMulti)
 
     # Initalise tool box

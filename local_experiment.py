@@ -1,6 +1,6 @@
 
 
-from experiment_MOGP import get_experiment
+from experiment_OrMOGP import get_experiment
 from run_a_task import run
 
 

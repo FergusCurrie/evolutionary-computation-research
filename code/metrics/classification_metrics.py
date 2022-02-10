@@ -4,6 +4,9 @@ from sklearn.metrics import accuracy_score, confusion_matrix
 def accuracy(y_true, y_pred):
     return accuracy_score(y_true, y_pred)
 
+def error_rate(y_true, y_pred):
+    return 1 - accuracy_score(y_true, y_pred)
+
 
 """def ensemble_voting(X, F):
     ypred = []

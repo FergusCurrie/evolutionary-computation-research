@@ -41,7 +41,8 @@ def fitness_calculation(individual, toolbox, X, y, w=0.5):
     return ave(confusion_matrix, w),
 
 
-def gp_member_generation(X,y, params):
+def gp_member_generation(X,y, params, seed):
+    random.seed(seed)
     # unpack parameters
     max_depth = params["max_depth"]
     pc = params["pc"]
