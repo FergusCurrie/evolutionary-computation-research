@@ -50,11 +50,11 @@ def get_experiment():
 
     # MODELS ###############################################################################################################
     # ORMOGP
-    ORMOGP_params_1 = {"p_size": 500, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 3, "verbose": False}
+    ORMOGP_params_1 = {"p_size": 500, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 50, "verbose": False}
     ORMOGP_params = [ORMOGP_params_1]
     ORMOGP_model = Model(
         member_generation_func=gp_ormo_member_generation,
-        member_selection_func=None, # offEEL
+        member_selection_func=offEEL, # offEEL
         decision_fusion_func=binary_voting,
         params=ORMOGP_params,
         pred_func=GP_predict,
