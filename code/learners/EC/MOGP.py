@@ -4,8 +4,8 @@ from deap.algorithms import varAnd
 import numpy as np
 from deap import algorithms
 import operator
-from code.learners.EC.deap_extra import get_pset, make_predictions
-from code.metrics.classification_metrics import *
+from code.learners.EC.deap_extra import GP_predict, get_pset
+from code.metrics.classification_metrics import accuracy
 import pandas as pd 
 import random
 
@@ -27,17 +27,6 @@ def get_toolbox(pset, max_depth, X, y):
     toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=max_depth))
     return toolbox
 
-def get_ypred(f, _X): # can abstract this from experiment_a gp predict
-    result = []
-    for x in _X:
-        z = f(*x)
-        if z >= 0:
-            result.append(1)
-        else:
-            result.append(0)
-    result = np.array(result)
-    return result
-
 def fitness_calculation(individual, toolbox, X, y):
     """
     Fitness function. Compiles tree then calls mse function
@@ -45,8 +34,8 @@ def fitness_calculation(individual, toolbox, X, y):
     func = toolbox.compile(expr=individual)
 
     # Calculate accuracy on class 0
-    class_0_acc = accuracy(y[y==0], get_ypred(func, X[y == 0]))
-    class_1_acc = accuracy(y[y==1], get_ypred(func, X[y == 1]))
+    class_0_acc = accuracy(y[y==0], GP_predict(func, X[y == 0]))
+    class_1_acc = accuracy(y[y==1], GP_predict(func, X[y == 1]))
 
     return class_0_acc, class_1_acc,
 

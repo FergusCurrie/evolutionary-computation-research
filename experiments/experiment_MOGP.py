@@ -4,40 +4,17 @@ Experiment testing baselines.
 import sys
 sys.path.append("/")
 
+from model import Model
+from code.data_processing import get_data
 from code.learners.EC.MOGP import gp_mo_member_generation
 from code.member_selection.offEEL import offEEL
-from code.learners.randomforest.randomforests import adaboost_classifier_member_generation
-from code.learners.randomforest.randomforests import random_forest_classifier_member_generation
-from code.data_processing import get_data
-from model import Model
-from code.metrics.classification_metrics import binary_metric
 from code.decision_fusion.voting import binary_voting
+from code.learners.EC.deap_extra import GP_predict
+from code.metrics.classification_metrics import binary_metric
+
 import numpy as np
 
-
-def GP_predict(learner, X):
-    """GP learner is simply a lambda. However it takes 5 arguments. 
-
-    Args:
-        learner (lambda): [description]
-        X ([type]): [description]
-
-    Returns:
-        np.array  : (n_datapoints, )
-    """
-    result = []
-    for x in X:
-        z = learner(*x)
-        if z >= 0:
-            result.append(1)
-        else:
-            result.append(0)
-    result = np.array(result)
-    assert(result.shape[0] == X.shape[0])
-    return np.array(result)
-
-
-def get_experiment():
+def get_experiment__mogp_experiment():
     # name
     exp_name = "mogp_experiment"
 

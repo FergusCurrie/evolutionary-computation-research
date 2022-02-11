@@ -45,21 +45,35 @@ def get_stats():
     mstats.register("min", np.min)
     return mstats
 
+def single_predict(learner, x):
+    '''
+    does the unpacking here
+    '''
+    res = 1
+    z = learner(*x) # unpack
+    if z >= 0:
+        res = 1
+    else:
+        res = 0
+    return res
 
-def make_predictions(_X, f):
-    """Uses a function to make a thresholded prediction across a given 2d dataset. For binary data 
+def array_predict(learner, X):
+    vfunc = np.vectorize(learner)
+    return vfunc(X)
+
+def GP_predict(learner, X):
+    """GP learner is simply a lambda. However it takes 5 arguments. 
 
     Args:
-        _X (np.array): dataset
-        f (callable): function
+        learner (lambda): [description]
+        X ([type]): [description]
 
     Returns:
-        np.array: array of predictions 
+        np.array  : (n_datapoints, )
     """
-    ypred = []
-    for x in _X:
-        yp = 1
-        if f(*x) < 0:
-            yp = 0
-        ypred.append(yp)
-    return np.array(ypred)
+    result = []
+    for x in X:
+        result.append(single_predict(learner,x))
+    result = np.array(result)
+    assert(result.shape[0] == X.shape[0])
+    return np.array(result)

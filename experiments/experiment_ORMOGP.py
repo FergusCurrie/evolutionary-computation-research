@@ -4,38 +4,16 @@ Experiment testing baselines.
 import sys
 sys.path.append("/")
 
-from code.learners.EC.OrMOGP import gp_ormo_member_generation
-from code.member_selection.offEEL import offEEL
-from code.data_processing import get_data
 from model import Model
-from code.metrics.classification_metrics import binary_metric
+from code.data_processing import get_data
+from code.learners.EC.ORMOGP import gp_ormo_member_generation
+from code.member_selection.offEEL import offEEL
 from code.decision_fusion.voting import binary_voting
-import numpy as np
+from code.learners.EC.deap_extra import GP_predict
+from code.metrics.classification_metrics import binary_metric
 
 
-def GP_predict(learner, X):
-    """GP learner is simply a lambda. However it takes 5 arguments. 
-
-    Args:
-        learner (lambda): [description]
-        X ([type]): [description]
-
-    Returns:
-        np.array  : (n_datapoints, )
-    """
-    result = []
-    for x in X:
-        z = learner(*x)
-        if z >= 0:
-            result.append(1)
-        else:
-            result.append(0)
-    result = np.array(result)
-    assert(result.shape[0] == X.shape[0])
-    return np.array(result)
-
-
-def get_experiment():
+def get_experiment__ORmogp_experiment():
     # name
     exp_name = "ORmogp_experiment"
 
@@ -70,5 +48,4 @@ def get_experiment():
         n_tasks += len(datasets) * len(model.params)
 
     return {"datasets": datasets, "metrics": metrics, "models": models, "n_tasks": n_tasks, "name": exp_name}
-    #return {"datasets": [datasets[0]], "metrics": [metrics[0]], "models": [models[0]], "n_tasks": 1, "name": [exp_name[0]]}
 

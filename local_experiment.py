@@ -1,10 +1,11 @@
 
 
-from experiment_OrMOGP import get_experiment
 from run_a_task import run
 
+from experiments.get_experiment import get_experiment
 
-experiment = get_experiment()
+name = 'ORmogp_experiment'
+experiment = get_experiment(name)
 
 for i in range(experiment['n_tasks']):
-    run(1, i+1)
+    run(1, i+1, name)

@@ -1,18 +1,12 @@
 # Code for MOGP 
-
-
 from deap import gp
 from deap import creator, base, tools
 from deap.algorithms import varAnd
 import numpy as np
-from deap import algorithms
-import math
 import operator
-import pandas as pd 
 import random
-
-from code.metrics.classification_metrics import *
-from code.learners.EC.deap_extra import get_pset, make_predictions
+from code.metrics.classification_metrics import calculate_confusion_matrix, ave
+from code.learners.EC.deap_extra import GP_predict, get_pset
 
 
 def get_toolbox(pset, t_size, max_depth, X, y):
@@ -36,7 +30,7 @@ def fitness_calculation(individual, toolbox, X, y, w=0.5):
     """
     func = toolbox.compile(expr=individual)
     # Calculated the 'ave' function
-    ypred = make_predictions(X, func)
+    ypred = GP_predict(func, X)
     confusion_matrix = calculate_confusion_matrix(y, ypred)
     return ave(confusion_matrix, w),
 
