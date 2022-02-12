@@ -26,7 +26,7 @@ def get_experiment__gp_experiment():
 
     # MODELS ###############################################################################################################
     # GP
-    GP_params_1 = {"p_size": 500, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 50, "verbose": True, "t_size": 7}
+    GP_params_1 = {"p_size": 5, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 2, "verbose": True, "t_size": 7}
 
     GP_params = [GP_params_1]
     GP_model = Model(

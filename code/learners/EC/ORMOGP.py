@@ -11,7 +11,7 @@ import pandas as pd
 import random
 import time 
 
-def fitness_calculation(individual, toolbox, X, y, pop, pop_diversity):
+def fitness_calculation(individual, toolbox, X, y, pop, pop_diversity, obj1):
     """
     Minimisation fitness calculation 
 
@@ -31,7 +31,7 @@ def fitness_calculation(individual, toolbox, X, y, pop, pop_diversity):
     """
     # First calculate obj1 - accuracy
     func = toolbox.compile(expr=individual)
-    err = accuracy(y, GP_predict(func, X))
+    err = obj1(y, GP_predict(func, X))
     
     # Then get diversity from dict
     index = -1
@@ -79,7 +79,7 @@ def calculate_diversity_dict(individuals, toolbox, X, y) -> dict:
     assert(P.shape == (M,N))
 
     # Calculate loss.. # P is essemtially 0/1 loss. - so 0 is good 
-    G = P  # ()
+    G = (P == np.tile(y, (M,1))) # i,j is curently ith data point  # ()
     assert(G.shape == (M,N))
     
     g_ = np.mean(G, axis=0) # mean along all models  - mean per
@@ -142,6 +142,7 @@ def gp_ormo_member_generation(X, y, params, seed):
     ngen = params["ngen"]
     verbose = params["verbose"]
     p_size = params["p_size"]
+    obj1 = params['obj1'] # what function to use for obj1
 
     # Initalise primitives
     pset = get_pset(num_args=X.shape[1])
@@ -159,7 +160,7 @@ def gp_ormo_member_generation(X, y, params, seed):
 
     pop = toolbox.population(n=p_size) # initialise the population to pass as final argument to fitnesss
     pop_diversity = calculate_diversity_dict(pop, toolbox, X, y)
-    toolbox.register("evaluate", fitness_calculation, toolbox=toolbox, X=X, y=y, pop=pop, pop_diversity=pop_diversity)  # HERE?
+    toolbox.register("evaluate", fitness_calculation, toolbox=toolbox, X=X, y=y, pop=pop, pop_diversity=pop_diversity, obj1=obj1)  # HERE?
     toolbox.register("select", tools.selNSGA2)
     toolbox.register("mate", gp.cxOnePoint)
     toolbox.register("expr_mut", gp.genHalfAndHalf, min_=0, max_=max_depth)
@@ -218,4 +219,4 @@ def gp_ormo_member_generation(X, y, params, seed):
 
     df = pd.DataFrame(logbook)
 
-    return [toolbox.compile(expr=ind) for ind in pop], df
+    return [toolbox.compile(expr=ind) for ind in pop], df, [str(ind) for ind in pop]

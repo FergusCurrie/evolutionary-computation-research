@@ -36,7 +36,8 @@ def tnr(cm):
     return tn / (tn + fp)
 
 
-def ave(cm, w):
+def ave(y, ypred, w=0.5):
+    cm = calculate_confusion_matrix(y, ypred)
     return (w * tpr(cm)) + ((1 - w) * tnr(cm))
 
 

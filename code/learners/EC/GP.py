@@ -7,6 +7,7 @@ import operator
 import random
 from code.metrics.classification_metrics import calculate_confusion_matrix, ave
 from code.learners.EC.deap_extra import GP_predict, get_pset
+import pandas as pd 
 
 
 def get_toolbox(pset, t_size, max_depth, X, y):
@@ -101,13 +102,12 @@ def gp_member_generation(X,y, params, seed):
         pop[:] = offspring_a
 
         # Append the current generation statistics to the logbook
-        print(pop)
         record = mstats.compile(pop) if mstats else {}
         logbook.record(gen=gen, nevals=len(invalid_ind), **record)
         if verbose:
             print(logbook.stream)
 
-
-    return [toolbox.compile(ind) for ind in pop]
+    df = pd.DataFrame(logbook)
+    return [toolbox.compile(ind) for ind in pop], df, [str(ind) for ind in pop]
 
 
