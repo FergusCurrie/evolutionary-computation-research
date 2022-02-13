@@ -1,0 +1,1 @@
+protectedDiv(ARG1, sub(add(1, ARG2), ARG4))

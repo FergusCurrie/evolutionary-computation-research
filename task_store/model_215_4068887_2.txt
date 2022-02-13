@@ -1,0 +1,1 @@
+protectedDiv(my_if(1, ARG4, x0), 1)

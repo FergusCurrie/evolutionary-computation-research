@@ -1,0 +1,1 @@
+my_if(ARG8, ARG6, mul(ARG3, 1))
