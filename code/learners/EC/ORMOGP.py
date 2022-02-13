@@ -85,8 +85,9 @@ def calculate_diversity_dict(individuals, toolbox, X, y) -> dict:
     g_ = np.mean(G, axis=0) # mean along all models  - mean per
     assert(g_.shape == (N,))
 
-    # Get ommision means - 
+    # Get ommision means - im happy with this 
     Gsj_ = ((g_ * M) - G ) / (M - 1) # (n x m) - doing for every observation
+
     assert(Gsj_.shape == ((M,N)))
 
     # Get diveristy full
@@ -94,23 +95,24 @@ def calculate_diversity_dict(individuals, toolbox, X, y) -> dict:
     diversity_full = np.mean(diversity_full, axis=0) # Expectation
     
     # Get diversity per omission - the reshaping is to prevent an elementwise subtraction
-    Q = G.reshape(N,M) - Gsj_.reshape(M,N,1) 
+    Q = G.reshape(M,N,1) - Gsj_.reshape(N,M) 
     assert(Q.shape == (M,N,M))
     
     # Zero the diagonal where model dimensions overlap
     for i in range(M):
         Q[i,:,i] = 0
 
-    # First the variance along the model ommisions axis
-    diversity_omissions = 1/(M-2) * np.sum(np.square(Q), axis=2)
-    assert(diversity_omissions.shape == (M,N))
+    # First the variance along the model ommisions axis - axis 0 is omission
+    diversity_omissions = np.sum(np.square(Q), axis=0) / (M - 1) # Have zeroed once per this dim so dont count to avg
+    assert(diversity_omissions.shape == (N,M))
 
     # Then the expectation along the observations axis
-    diversity_omissions = np.mean(diversity_omissions, axis=1) 
+    diversity_omissions = np.mean(diversity_omissions, axis=0) 
     assert(diversity_omissions.shape == (M,))
 
     # Final diversity - remaining model axis 
-    diversity = diversity_full - diversity_omissions
+    #diversity = diversity_full - diversity_omissions
+    diversity = -diversity_omissions
     assert(diversity.shape == (M,))
 
     return diversity
@@ -160,6 +162,7 @@ def gp_ormo_member_generation(X, y, params, seed):
 
     pop = toolbox.population(n=p_size) # initialise the population to pass as final argument to fitnesss
     pop_diversity = calculate_diversity_dict(pop, toolbox, X, y)
+    #return pop_diversity, [toolbox.compile(expr=ind) for ind in pop]
     toolbox.register("evaluate", fitness_calculation, toolbox=toolbox, X=X, y=y, pop=pop, pop_diversity=pop_diversity, obj1=obj1)  # HERE?
     toolbox.register("select", tools.selNSGA2)
     toolbox.register("mate", gp.cxOnePoint)
@@ -220,3 +223,62 @@ def gp_ormo_member_generation(X, y, params, seed):
     df = pd.DataFrame(logbook)
 
     return [toolbox.compile(expr=ind) for ind in pop], df, [str(ind) for ind in pop]
+
+
+
+
+def test_div_helper(X, y, params, fs):
+    return
+
+    # Now we want to be able to confirm this
+    G = 0
+    e = 0 
+    gsmeans = []
+    for X_, y_ in zip(X, y):
+        gs = []# all predictions through loss for this observation
+        for f in fs:
+            p = single_predict(f, X_)
+            if p == y_:
+                g = 1
+            else:
+                g = 0
+            G += g# just for total comparison
+            # loss applied, now variance?
+            gs.append(g)
+        gs_mean = np.mean(np.array(gs))
+        gsmeans.append(gs_mean)
+        s = 0 # Sum
+        for g in gs:
+            s += (np.square(g - gs_mean)) 
+        e += s / (len(fs) + 1)
+    return e / len(X), 
+        
+
+
+def test(X, y, params):
+    """
+
+    Making sure we havent completlyt fucked how this should work for diversity calc
+
+    """
+    return
+    
+    pred_d, fs = gp_ormo_member_generation(X, y, params, 12)
+    print(pred_d)
+
+    d = test_div_helper(X, y, params, fs)
+    # print(d)
+
+
+    true_d = []
+    for i,f in enumerate(fs):
+        print(i)
+        t = [ff for ff in fs if ff != f]
+        assert(len(t)+1 == len(fs))
+        d = test_div_helper(X, y, params, t)
+        true_d.append(d)
+    true_d = np.array(true_d)
+
+    print(true_d)
+
+    
