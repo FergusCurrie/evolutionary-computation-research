@@ -32,8 +32,8 @@ def fitness_calculation(individual, toolbox, X, y, w=0.5):
     func = toolbox.compile(expr=individual)
     # Calculated the 'ave' function
     ypred = GP_predict(func, X)
-    confusion_matrix = calculate_confusion_matrix(y, ypred)
-    return ave(confusion_matrix, w),
+    x = ave(y, ypred)
+    return x,
 
 
 def gp_member_generation(X,y, params, seed):

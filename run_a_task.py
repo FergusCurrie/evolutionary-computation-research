@@ -82,7 +82,7 @@ def run(jobid : int, taskid : int, name : str):
         results.append([True] + [True] + [seed] + [end - start] + training_results)
         results.append([True] + [False] + [seed] + [end - start] + test_results)
         # Save the models 
-        model.ensemble_save(jobid, taskid, 'gen')
+        model.ensemble_save(jobid, taskid, seed, 'gen')
 
         # Member Selection
         start = time.time()
@@ -94,7 +94,7 @@ def run(jobid : int, taskid : int, name : str):
         test_results = model.ensemble_evaluation(X_test, y_test, metrics) # comes back as [[training, seed , tpr, ..]]
         results.append([False] + [True] + [seed] + [end - start] + training_results)
         results.append([False] + [False] + [seed] + [end - start] + test_results)
-        model.ensemble_save(jobid, taskid, 'sel')
+        model.ensemble_save(jobid, taskid, seed, 'sel')
 
         # Save history
         model.history.to_csv(f'task_store/history_{i}_{name}_job_{jobid}_task_{taskid}_{dataset_name}.csv')

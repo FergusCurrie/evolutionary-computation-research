@@ -1,1 +1,0 @@
-sub(protectedDiv(mul(1, ARG1), mul(mul(ARG3, x0), add(ARG1, 1))), my_if(3, ARG1, 2))

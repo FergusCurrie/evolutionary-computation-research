@@ -1,1 +1,0 @@
-protectedDiv(add(2, 1), 3)

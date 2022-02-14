@@ -1,1 +1,0 @@
-add(protectedDiv(ARG30, add(ARG23, mul(ARG14, ARG11))), ARG15)

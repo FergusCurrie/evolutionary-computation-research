@@ -10,6 +10,7 @@ from code.learners.EC.GP import gp_member_generation
 from code.decision_fusion.voting import binary_voting
 from code.learners.EC.deap_extra import GP_predict
 from code.metrics.classification_metrics import binary_metric
+from code.member_selection.offEEL import offEEL
 
 def get_experiment__gp_experiment():
     # name
@@ -26,12 +27,12 @@ def get_experiment__gp_experiment():
 
     # MODELS ###############################################################################################################
     # GP
-    GP_params_1 = {"p_size": 5, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 2, "verbose": True, "t_size": 7}
+    GP_params_1 = {"p_size": 500, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 50, "verbose": False, "t_size": 7}
 
     GP_params = [GP_params_1]
     GP_model = Model(
         member_generation_func=gp_member_generation,
-        member_selection_func=None, # offEEl
+        member_selection_func=offEEL, # offEEl
         decision_fusion_func=binary_voting,
         params=GP_params,
         pred_func=GP_predict,

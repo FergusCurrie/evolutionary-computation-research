@@ -1,1 +1,0 @@
-protectedDiv(sub(1, protectedDiv(3, 3)), sub(add(1, mul(3, ARG3)), 3))

@@ -9,8 +9,8 @@ from experiments.get_experiment import get_experiment
 from code.learners.EC.ORMOGP import test
 
 
-ORMOGP_params_1 = {"p_size": 500, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 50, "verbose": False, "obj1":accuracy}
-X, y = get_data("ionosphere")
+#ORMOGP_params_1 = {"p_size": 500, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 50, "verbose": False, "obj1":accuracy}
+#, y = get_data("ionosphere")
 
 
 
@@ -20,7 +20,7 @@ X, y = get_data("ionosphere")
 
 if True:
     #name = 'full_experiment'
-    name = 'ORmogp_experiment'
+    name = 'gp_experiment'
 
     experiment = get_experiment(name)
     print(f'number of tasks : {experiment["n_tasks"]}')

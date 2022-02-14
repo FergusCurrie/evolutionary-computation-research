@@ -1,1 +1,0 @@
-my_if(1, protectedDiv(protectedDiv(ARG4, x0), x0), 2)
