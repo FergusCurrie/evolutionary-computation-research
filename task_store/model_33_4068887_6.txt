@@ -1,0 +1,1 @@
+mul(ARG4, sub(ARG4, ARG4))

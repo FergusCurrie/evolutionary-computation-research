@@ -1,0 +1,1 @@
+mul(protectedDiv(mul(ARG14, ARG27), 1), 2)
