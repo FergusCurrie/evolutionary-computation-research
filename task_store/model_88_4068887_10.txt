@@ -1,0 +1,1 @@
+sub(add(add(sub(3, ARG3), sub(ARG2, ARG1)), 1), ARG1)

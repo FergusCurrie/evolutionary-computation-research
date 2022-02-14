@@ -1,0 +1,1 @@
+mul(add(3, add(ARG2, ARG1)), add(add(x0, x0), sub(add(ARG2, 1), 1)))

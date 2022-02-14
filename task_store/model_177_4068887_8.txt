@@ -1,0 +1,1 @@
+sub(sub(ARG7, sub(1, protectedDiv(protectedDiv(ARG7, ARG1), ARG1))), ARG7)

@@ -1,0 +1,1 @@
+mul(3, sub(x0, ARG3))

@@ -1,0 +1,1 @@
+my_if(ARG1, 3, sub(protectedDiv(mul(3, 2), 1), 1))

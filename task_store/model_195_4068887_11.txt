@@ -1,0 +1,1 @@
+sub(add(ARG11, ARG7), mul(2, ARG5))

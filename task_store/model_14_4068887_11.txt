@@ -1,0 +1,1 @@
+protectedDiv(protectedDiv(protectedDiv(add(add(ARG12, 3), my_if(ARG4, ARG2, ARG7)), my_if(add(ARG3, ARG8), add(ARG11, ARG2), 1)), ARG4), mul(protectedDiv(mul(ARG12, ARG6), ARG8), my_if(protectedDiv(sub(3, ARG6), ARG7), my_if(ARG7, ARG11, x0), my_if(2, 2, ARG2))))

@@ -1,0 +1,1 @@
+sub(sub(sub(ARG1, ARG3), my_if(ARG4, ARG3, ARG4)), ARG3)

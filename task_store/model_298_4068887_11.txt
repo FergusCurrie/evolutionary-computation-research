@@ -1,0 +1,1 @@
+sub(add(ARG12, ARG6), add(ARG12, ARG1))
