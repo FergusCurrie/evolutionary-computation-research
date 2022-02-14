@@ -1,1 +1,0 @@
-sub(add(ARG4, sub(ARG7, 3)), 3)

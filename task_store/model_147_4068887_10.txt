@@ -1,1 +1,0 @@
-mul(ARG3, my_if(ARG3, ARG2, ARG4))

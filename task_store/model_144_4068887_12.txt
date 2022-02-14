@@ -1,1 +1,0 @@
-sub(add(sub(add(mul(ARG7, ARG3), protectedDiv(ARG5, ARG2)), add(mul(x0, ARG1), mul(3, 1))), 2), ARG2)

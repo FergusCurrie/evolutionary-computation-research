@@ -1,1 +1,0 @@
-sub(ARG2, mul(sub(protectedDiv(ARG6, ARG6), ARG3), ARG6))

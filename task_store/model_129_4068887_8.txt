@@ -1,1 +1,0 @@
-sub(protectedDiv(ARG5, ARG6), ARG2)

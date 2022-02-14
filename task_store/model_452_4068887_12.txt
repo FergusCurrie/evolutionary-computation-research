@@ -1,1 +1,0 @@
-sub(sub(ARG6, ARG5), protectedDiv(ARG3, add(my_if(ARG7, ARG8, ARG1), mul(ARG7, 3))))

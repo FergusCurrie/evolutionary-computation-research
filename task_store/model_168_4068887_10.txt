@@ -1,1 +1,0 @@
-my_if(mul(2, 2), sub(ARG3, protectedDiv(x0, 1)), ARG1)

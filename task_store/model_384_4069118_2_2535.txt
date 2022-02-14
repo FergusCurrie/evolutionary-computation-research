@@ -1,1 +1,0 @@
-protectedDiv(sub(sub(x0, 3), 2), protectedDiv(sub(x0, 3), 3))

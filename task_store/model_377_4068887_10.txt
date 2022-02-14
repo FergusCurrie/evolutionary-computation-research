@@ -1,1 +1,0 @@
-mul(mul(x0, ARG2), add(sub(add(protectedDiv(mul(sub(ARG1, x0), protectedDiv(3, ARG3)), my_if(2, x0, ARG4)), sub(2, my_if(ARG2, ARG1, x0))), ARG2), ARG4))

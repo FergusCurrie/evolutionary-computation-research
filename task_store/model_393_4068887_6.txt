@@ -1,1 +1,0 @@
-add(add(add(add(ARG2, 2), add(1, mul(my_if(ARG2, add(my_if(ARG3, ARG4, ARG1), mul(ARG1, x0)), 1), ARG2))), 1), ARG1)

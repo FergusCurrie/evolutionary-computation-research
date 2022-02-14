@@ -1,1 +1,0 @@
-add(1, add(protectedDiv(ARG8, ARG4), add(ARG3, 1)))

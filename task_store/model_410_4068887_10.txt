@@ -1,1 +1,0 @@
-sub(my_if(mul(3, my_if(ARG2, 1, add(ARG1, ARG1))), x0, sub(1, ARG2)), ARG2)

@@ -1,1 +1,0 @@
-sub(add(2, sub(ARG7, protectedDiv(x0, ARG8))), 3)

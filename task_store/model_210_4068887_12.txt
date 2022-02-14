@@ -1,1 +1,0 @@
-protectedDiv(2, mul(ARG5, my_if(ARG6, ARG4, add(ARG8, ARG8))))

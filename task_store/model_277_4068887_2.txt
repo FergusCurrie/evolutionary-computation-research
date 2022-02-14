@@ -1,1 +1,0 @@
-mul(protectedDiv(ARG4, x0), ARG2)

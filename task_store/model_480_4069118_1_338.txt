@@ -1,1 +1,0 @@
-protectedDiv(x0, protectedDiv(ARG26, protectedDiv(ARG26, ARG3)))

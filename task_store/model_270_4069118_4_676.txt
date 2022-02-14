@@ -1,1 +1,0 @@
-sub(sub(add(1, sub(sub(3, ARG1), sub(ARG7, 2))), sub(sub(ARG1, ARG1), 3)), add(1, sub(sub(3, ARG1), sub(ARG7, 2))))

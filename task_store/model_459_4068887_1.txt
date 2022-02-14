@@ -1,1 +1,0 @@
-protectedDiv(mul(ARG24, ARG26), ARG22)

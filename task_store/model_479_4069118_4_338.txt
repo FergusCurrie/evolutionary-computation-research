@@ -1,1 +1,0 @@
-sub(sub(protectedDiv(ARG1, ARG6), protectedDiv(ARG4, x0)), add(sub(ARG3, ARG7), protectedDiv(add(x0, 3), protectedDiv(ARG5, 3))))

@@ -1,1 +1,0 @@
-add(x0, mul(ARG2, 2))

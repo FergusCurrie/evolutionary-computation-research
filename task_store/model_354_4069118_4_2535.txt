@@ -1,1 +1,0 @@
-add(ARG2, ARG6)

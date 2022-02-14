@@ -1,1 +1,0 @@
-my_if(mul(my_if(ARG6, 1, ARG5), my_if(2, ARG5, ARG1)), x0, 3)

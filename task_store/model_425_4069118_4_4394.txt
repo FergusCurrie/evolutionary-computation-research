@@ -1,1 +1,0 @@
-mul(sub(x0, ARG2), my_if(ARG5, ARG7, ARG3))

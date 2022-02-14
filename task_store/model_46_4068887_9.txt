@@ -1,1 +1,0 @@
-add(mul(ARG9, ARG27), 1)

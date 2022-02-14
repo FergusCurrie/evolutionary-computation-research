@@ -1,1 +1,0 @@
-protectedDiv(my_if(ARG4, 1, 2), add(protectedDiv(ARG2, protectedDiv(2, ARG1)), 1))

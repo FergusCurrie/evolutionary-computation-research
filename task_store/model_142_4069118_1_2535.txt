@@ -1,1 +1,0 @@
-mul(sub(ARG25, ARG8), sub(ARG28, 3))

@@ -1,1 +1,0 @@
-mul(my_if(add(1, ARG4), 3, 2), 1)

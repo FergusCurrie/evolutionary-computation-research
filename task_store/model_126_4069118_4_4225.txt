@@ -1,1 +1,0 @@
-sub(mul(3, mul(ARG7, ARG2)), add(add(my_if(ARG8, ARG7, 1), add(my_if(3, ARG7, ARG5), sub(1, ARG1))), add(sub(2, ARG8), sub(add(3, ARG7), 2))))

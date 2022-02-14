@@ -1,1 +1,0 @@
-sub(sub(ARG5, 2), protectedDiv(2, 3))

@@ -1,1 +1,0 @@
-add(1, mul(add(x0, my_if(2, x0, ARG1)), sub(sub(3, 1), ARG1)))

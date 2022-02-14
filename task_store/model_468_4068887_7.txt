@@ -1,1 +1,0 @@
-mul(sub(ARG6, ARG4), my_if(ARG12, ARG9, ARG3))

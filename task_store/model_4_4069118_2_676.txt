@@ -1,1 +1,0 @@
-sub(add(ARG3, x0), add(protectedDiv(ARG4, ARG1), 3))

@@ -1,1 +1,0 @@
-sub(add(ARG3, x0), add(mul(mul(ARG4, ARG4), mul(x0, 2)), 3))

@@ -1,1 +1,0 @@
-my_if(ARG4, add(sub(ARG5, 1), protectedDiv(add(3, ARG6), x0)), 2)

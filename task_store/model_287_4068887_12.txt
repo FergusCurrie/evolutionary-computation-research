@@ -1,1 +1,0 @@
-mul(3, sub(add(mul(ARG3, ARG8), my_if(1, ARG4, 1)), 1))

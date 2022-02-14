@@ -1,1 +1,0 @@
-sub(ARG3, sub(ARG4, sub(1, sub(3, ARG1))))

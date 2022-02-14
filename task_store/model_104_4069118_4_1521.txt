@@ -1,1 +1,0 @@
-sub(mul(ARG1, ARG4), add(ARG6, 1))

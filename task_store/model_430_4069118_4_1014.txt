@@ -1,1 +1,0 @@
-sub(add(sub(mul(ARG5, x0), 3), sub(ARG7, 3)), 3)

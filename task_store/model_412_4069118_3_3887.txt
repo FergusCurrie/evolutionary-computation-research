@@ -1,1 +1,0 @@
-mul(add(ARG8, ARG5), sub(1, ARG5))

@@ -1,1 +1,0 @@
-sub(sub(3, ARG1), sub(3, protectedDiv(ARG4, x0)))

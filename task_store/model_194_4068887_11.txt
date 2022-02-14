@@ -1,1 +1,0 @@
-mul(mul(ARG1, ARG8), mul(3, ARG3))
