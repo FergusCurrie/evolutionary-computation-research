@@ -1,0 +1,1 @@
+add(sub(add(ARG2, sub(ARG1, ARG7)), ARG2), protectedDiv(3, x0))

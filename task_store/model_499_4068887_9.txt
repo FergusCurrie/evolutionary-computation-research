@@ -1,0 +1,1 @@
+mul(sub(x0, ARG10), ARG32)

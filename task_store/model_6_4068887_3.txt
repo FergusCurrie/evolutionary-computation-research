@@ -1,0 +1,1 @@
+add(ARG9, sub(sub(add(ARG3, ARG10), protectedDiv(add(1, ARG7), ARG1)), ARG4))

@@ -1,0 +1,1 @@
+mul(sub(ARG26, ARG22), sub(protectedDiv(protectedDiv(ARG31, ARG15), ARG32), ARG26))

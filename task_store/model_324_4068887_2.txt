@@ -1,0 +1,1 @@
+sub(protectedDiv(add(ARG3, ARG4), protectedDiv(2, ARG1)), protectedDiv(protectedDiv(ARG4, ARG1), mul(x0, ARG2)))

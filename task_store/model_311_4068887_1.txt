@@ -1,0 +1,1 @@
+add(sub(ARG32, mul(add(ARG12, add(ARG1, ARG32)), mul(ARG15, ARG8))), ARG15)

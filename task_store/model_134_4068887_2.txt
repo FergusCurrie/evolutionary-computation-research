@@ -1,0 +1,1 @@
+protectedDiv(mul(2, ARG4), ARG3)

@@ -1,0 +1,1 @@
+my_if(3, protectedDiv(sub(1, ARG4), ARG3), 2)

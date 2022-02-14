@@ -1,0 +1,1 @@
+protectedDiv(add(add(sub(x0, ARG1), 1), ARG3), ARG1)
