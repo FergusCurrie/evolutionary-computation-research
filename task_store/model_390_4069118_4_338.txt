@@ -1,0 +1,1 @@
+sub(ARG1, add(sub(ARG3, ARG7), protectedDiv(add(3, 3), protectedDiv(ARG6, 3))))

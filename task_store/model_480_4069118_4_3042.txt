@@ -1,0 +1,1 @@
+sub(add(sub(2, ARG2), sub(protectedDiv(ARG6, my_if(sub(2, ARG2), ARG6, ARG1)), 3)), sub(2, ARG5))

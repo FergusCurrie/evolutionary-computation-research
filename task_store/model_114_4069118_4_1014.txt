@@ -1,0 +1,1 @@
+sub(add(sub(mul(ARG5, sub(2, sub(ARG1, 3))), 3), sub(ARG7, 3)), 3)

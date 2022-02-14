@@ -1,0 +1,1 @@
+add(ARG6, add(add(ARG30, protectedDiv(mul(ARG11, x0), sub(ARG6, mul(ARG6, ARG25)))), add(protectedDiv(protectedDiv(ARG31, ARG13), ARG27), mul(ARG19, ARG19))))

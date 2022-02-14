@@ -1,0 +1,1 @@
+mul(my_if(add(ARG8, add(2, 1)), ARG5, ARG4), ARG1)
