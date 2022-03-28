@@ -50,7 +50,7 @@ def fitness_calculation(individual, toolbox, X, y):
     """
     func = toolbox.compile(expr=individual)
     ypred = GP_predict(func, X) # ave here? 
-    x = ave(y, ypred)
+    x = accuracy(y, ypred)
     return x,
 
 # GP_predict(e1, X), GP_predict(e2, X)
@@ -58,15 +58,15 @@ def clearing_method(pop, toolbox, X, y, radius, capacity):
     sorted_ensemble = sorted(pop, key=lambda member : accuracy(y, GP_predict(toolbox.compile(expr=member), X)), reverse=True) # DESCENDING 
     for i in range(len(sorted_ensemble)):
         if sorted_ensemble[i].fitness.values[0] < np.inf:
-            n = 1
-            for j in range(i+1, len(pop), 1):
+            n = 0
+            for j in range(i+1, len(pop), 1): # is this loop right? 
                 ce1 = toolbox.compile(expr=sorted_ensemble[i])
                 ce2 = toolbox.compile(expr=sorted_ensemble[j])
-                if sorted_ensemble[j].fitness.values[0] < np.inf and difference(GP_predict(ce1, X), GP_predict(ce2, X)) < radius:
+                if (sorted_ensemble[j].fitness.values[0] < np.inf) and (difference(GP_predict(ce1, X), GP_predict(ce2, X)) < radius):
                     if n < capacity:
                         n = n + 1
                     else:
-                        sorted_ensemble[j].fitness.values = (np.inf, )
+                        sorted_ensemble[j].fitness.values = (np.inf,)
 
 
 
@@ -80,6 +80,9 @@ def divnichegp_member_generation(X,y, params, seed):
     p_size = params['p_size']
     verbose = params["verbose"]
     t_size = params['t_size']
+    batch_size = params['batch_size']
+    radius = params['radius']
+    capacity = params['capacity']
 
     # Initalise primitives
     pset = get_pset(num_args=X.shape[1])
@@ -112,7 +115,6 @@ def divnichegp_member_generation(X,y, params, seed):
     # Generation 
     for gen in range(1, ngen + 1):
         # First take a sample from training 
-        batch_size = 100
         idx = np.random.choice(np.arange(len(X)), batch_size, replace=False)
         Xsubset = X[idx]
         ysubset = y[idx]
@@ -131,7 +133,7 @@ def divnichegp_member_generation(X,y, params, seed):
             halloffame.update(offspring_a)
         
         # Apply clearning method 
-        clearing_method(offspring_a, toolbox, Xsubset, ysubset, radius=1, capacity=1)
+        clearing_method(offspring_a, toolbox, Xsubset, ysubset, radius=radius, capacity=capacity)
         
         pop[:] = offspring_a
         record = mstats.compile(pop) if mstats else {}
@@ -142,5 +144,4 @@ def divnichegp_member_generation(X,y, params, seed):
 
 
     # Apply greedy member selection algorithm
-    pop = greedyEnsemble([toolbox.compile(ind) for ind in pop], X, y, None) # make sure that pop is complied 
-    return pop, df, [str(ind) for ind in pop]
+    return [toolbox.compile(ind) for ind in pop], df, [str(ind) for ind in pop]

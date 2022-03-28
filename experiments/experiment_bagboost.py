@@ -30,7 +30,7 @@ def get_experiment_bagboost_experiment():
 
     # MODELS ###############################################################################################################
     # BaggingGP
-    bag_params_1 = {"p_size": 500, "max_depth": 5, "pc": 0.6, "pm": 0.4, "ngen": 30, "verbose": False, "t_size": 7}
+    bag_params_1 = {"p_size": 500, "max_depth": 5, "pc": 0.6, "pm": 0.4, "ngen": 20, "verbose": False, "t_size": 7, 'ncycles':5, 'batch_size':100}
     bag_params = [bag_params_1]
     bag_model = Model(
         member_generation_func=divbagging_member_generation,
@@ -42,7 +42,18 @@ def get_experiment_bagboost_experiment():
 
 
     # NichingGP
-    nich_params_1 = {"p_size": 500, "max_depth": 5, "pc": 0.6, "pm": 0.4, "ngen": 30, "verbose": False, "t_size": 7}
+    nich_params_1 = {
+        "p_size": 500, 
+        "max_depth": 5, 
+        "pc": 0.6, 
+        "pm": 0.4, 
+        "ngen": 100, 
+        "verbose": False, 
+        "t_size": 7, 
+        'batch_size':1100,
+        'radius': 1, # radius of the niche
+        'capacity': 1 # number of winners in a niche 
+    }
 
     nich_params = [nich_params_1]
     nich_model = Model(

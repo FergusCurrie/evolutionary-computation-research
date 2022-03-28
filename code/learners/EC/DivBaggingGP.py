@@ -120,8 +120,8 @@ def gp_member_generation(X,y, params, seed):
 #######################################################################################################################
 
 def divbagging_member_generation(X, y, params, seed): # this is going to call the innergp a few times. 
-    ncycles  = 5
-    batch_size = 100
+    ncycles  = params['ncycles']
+    batch_size = params['batch_size']
     ensemble = []
     for c in range(ncycles):
         print(f'cycle = {c}')
