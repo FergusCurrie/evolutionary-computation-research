@@ -1,4 +1,15 @@
-# Code for MOGP 
+"""
+Quick code for gp niching for multi-class classification
+
+Need to pull out the parameters for this. Go line by line because there are so many of them currently. 
+"""
+
+
+
+from code.data_processing import get_data
+from code.learners.EC.GP import gp_member_generation
+from code.member_selection.greedyEnsemble import greedyEnsemble
+from code.metrics.classification_metrics import *
 from deap import gp
 from deap import creator, base, tools
 from deap.algorithms import varAnd
@@ -8,15 +19,17 @@ import random
 from code.metrics.classification_metrics import *
 from code.learners.EC.deap_extra import GP_predict, get_pset
 import pandas as pd 
+from code.decision_fusion.voting import binary_voting
 
+    
 
-def get_toolbox(pset, t_size, max_depth, X, y):
+def get_toolbox(pset, t_size, max_depth, Xsubset, ysubset):
     toolbox = base.Toolbox()
     toolbox.register("expr", gp.genHalfAndHalf, pset=pset, min_=1, max_=max_depth)
     toolbox.register("individual", tools.initIterate, creator.Individual, toolbox.expr)
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     toolbox.register("compile", gp.compile, pset=pset)
-    toolbox.register("evaluate", fitness_calculation, toolbox=toolbox, X=X, y=y) # HERE?
+    toolbox.register("evaluate", fitness_calculation, toolbox=toolbox, X=Xsubset, y=ysubset) # HERE?
     toolbox.register("select", tools.selTournament, tournsize=t_size)
     toolbox.register("mate", gp.cxOnePoint)
     toolbox.register("expr_mut", gp.genHalfAndHalf, min_=0, max_=max_depth)
@@ -25,20 +38,40 @@ def get_toolbox(pset, t_size, max_depth, X, y):
     toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=max_depth))
     return toolbox
 
-def fitness_calculation(individual, toolbox, X, y, w=0.5):
+
+def difference(pc1, pc2):
+    dist = np.linalg.norm(pc1 - pc2)
+    return dist 
+
+
+def fitness_calculation(individual, toolbox, X, y):
     """
     Fitness function. Compiles GP then tests
     """
     func = toolbox.compile(expr=individual)
-    # Calculated the 'ave' function
-    ypred = GP_predict(func, X)
+    ypred = GP_predict(func, X) # ave here? 
     x = ave(y, ypred)
     return x,
 
-def gp_member_generation(X,y, params, seed):
+# GP_predict(e1, X), GP_predict(e2, X)
+def clearing_method(pop, toolbox, X, y, radius, capacity):
+    sorted_ensemble = sorted(pop, key=lambda member : accuracy(y, GP_predict(toolbox.compile(expr=member), X)), reverse=True) # DESCENDING 
+    for i in range(len(sorted_ensemble)):
+        if sorted_ensemble[i].fitness.values[0] < np.inf:
+            n = 1
+            for j in range(i+1, len(pop), 1):
+                ce1 = toolbox.compile(expr=sorted_ensemble[i])
+                ce2 = toolbox.compile(expr=sorted_ensemble[j])
+                if sorted_ensemble[j].fitness.values[0] < np.inf and difference(GP_predict(ce1, X), GP_predict(ce2, X)) < radius:
+                    if n < capacity:
+                        n = n + 1
+                    else:
+                        sorted_ensemble[j].fitness.values = (np.inf, )
+
+
+
+def divnichegp_member_generation(X,y, params, seed):
     random.seed(seed)
-    # default fitness function
-    fitness_func = fitness_calculation
     # unpack parameters
     max_depth = params["max_depth"]
     pc = params["pc"]
@@ -48,10 +81,6 @@ def gp_member_generation(X,y, params, seed):
     verbose = params["verbose"]
     t_size = params['t_size']
 
-    if 'bagging' in params:
-        fitness_func = params['fitness_function']
-        curr_ensemble = params['current_ensemble']
-
     # Initalise primitives
     pset = get_pset(num_args=X.shape[1])
 
@@ -60,7 +89,9 @@ def gp_member_generation(X,y, params, seed):
     creator.create("Individual", gp.PrimitiveTree, fitness=creator.FitnessMax)
 
     # Initalise tool box
-    toolbox = get_toolbox(pset, t_size, max_depth, X, y)
+    Xsubset = X
+    ysubset = y
+    toolbox = get_toolbox(pset, t_size, max_depth, Xsubset, ysubset)
 
     # Run GP
     pop = toolbox.population(n=p_size)
@@ -78,41 +109,38 @@ def gp_member_generation(X,y, params, seed):
     logbook = tools.Logbook()
     logbook.header = ['gen', 'nevals'] + (mstats.fields if mstats else [])
 
-    # Evolution process 
+    # Generation 
     for gen in range(1, ngen + 1):
-        
-        #if verbose:
-            #print(f'Generation {gen}/{ngen}')
-        
-        
+        # First take a sample from training 
+        batch_size = 100
+        idx = np.random.choice(np.arange(len(X)), batch_size, replace=False)
+        Xsubset = X[idx]
+        ysubset = y[idx]
 
-        # Select the next generation individuals
+        print(f'gen = {gen}')
+        # Produce offspring 
         offspring_a = toolbox.select(pop, len(pop))
-
-        # Vary the pool of individuals
         offspring_a = varAnd(offspring_a, toolbox, pc, pm)
 
-        # Update pop a
+        # Evaluate
         invalid_ind = [ind for ind in offspring_a if not ind.fitness.valid]
         fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
         for ind, fit in zip(invalid_ind, fitnesses):
             ind.fitness.values = fit
-
-        # Update the hall of fame with the generated individuals
         if halloffame is not None:
             halloffame.update(offspring_a)
-
-
-        # Replace the current population by the offspring
+        
+        # Apply clearning method 
+        clearing_method(offspring_a, toolbox, Xsubset, ysubset, radius=1, capacity=1)
+        
         pop[:] = offspring_a
-
-        # Append the current generation statistics to the logbook
         record = mstats.compile(pop) if mstats else {}
         logbook.record(gen=gen, nevals=len(invalid_ind), **record)
         if verbose:
             print(logbook.stream)
-
     df = pd.DataFrame(logbook)
-    return [toolbox.compile(ind) for ind in pop], df, [str(ind) for ind in pop]
 
 
+    # Apply greedy member selection algorithm
+    pop = greedyEnsemble([toolbox.compile(ind) for ind in pop], X, y, None) # make sure that pop is complied 
+    return pop, df, [str(ind) for ind in pop]

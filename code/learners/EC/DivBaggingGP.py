@@ -1,4 +1,7 @@
-# Code for MOGP 
+
+from code.data_processing import get_data
+from code.learners.EC.GP import gp_member_generation
+from code.metrics.classification_metrics import *
 from deap import gp
 from deap import creator, base, tools
 from deap.algorithms import varAnd
@@ -8,15 +11,17 @@ import random
 from code.metrics.classification_metrics import *
 from code.learners.EC.deap_extra import GP_predict, get_pset
 import pandas as pd 
+from code.decision_fusion.voting import binary_voting
 
+    
 
-def get_toolbox(pset, t_size, max_depth, X, y):
+def get_toolbox(pset, t_size, max_depth, X, y, curr_ensemble):
     toolbox = base.Toolbox()
     toolbox.register("expr", gp.genHalfAndHalf, pset=pset, min_=1, max_=max_depth)
     toolbox.register("individual", tools.initIterate, creator.Individual, toolbox.expr)
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     toolbox.register("compile", gp.compile, pset=pset)
-    toolbox.register("evaluate", fitness_calculation, toolbox=toolbox, X=X, y=y) # HERE?
+    toolbox.register("evaluate", bagging_fitness_calculation, toolbox=toolbox, X=X, y=y, ensemble=curr_ensemble) # HERE?
     toolbox.register("select", tools.selTournament, tournsize=t_size)
     toolbox.register("mate", gp.cxOnePoint)
     toolbox.register("expr_mut", gp.genHalfAndHalf, min_=0, max_=max_depth)
@@ -25,20 +30,37 @@ def get_toolbox(pset, t_size, max_depth, X, y):
     toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=max_depth))
     return toolbox
 
-def fitness_calculation(individual, toolbox, X, y, w=0.5):
+
+def difference(pc1, pc2):
+    dist = np.linalg.norm(pc1 - pc2)
+    return dist 
+
+def bagging_fitness_calculation(individual, toolbox, X, y, ensemble):
     """
     Fitness function. Compiles GP then tests
     """
-    func = toolbox.compile(expr=individual)
-    # Calculated the 'ave' function
-    ypred = GP_predict(func, X)
-    x = ave(y, ypred)
-    return x,
+    e1 = toolbox.compile(expr=individual)
+    temp_ensemble = ensemble + [e1] 
+    # check difference 
+    delta = np.inf
+    for e2 in ensemble:
+        d = difference(GP_predict(e1, X), GP_predict(e2, X))  # this uses the selection of the ensemble, think that is UCARP specific 
+        if d < delta:
+            delta = d
+    if delta == 0:
+        return np.inf, 
+
+    # calculate the temporary ensemble
+    ypred = []
+    for e in temp_ensemble:
+        ypred.append(GP_predict(e, X)) # might have to do one by one then combine
+    ypred = np.array(ypred)
+    assert(ypred.shape == (len(temp_ensemble),len(X)))
+    ypred = binary_voting(ypred)
+    return accuracy(y, ypred), # here
 
 def gp_member_generation(X,y, params, seed):
     random.seed(seed)
-    # default fitness function
-    fitness_func = fitness_calculation
     # unpack parameters
     max_depth = params["max_depth"]
     pc = params["pc"]
@@ -47,10 +69,7 @@ def gp_member_generation(X,y, params, seed):
     p_size = params['p_size']
     verbose = params["verbose"]
     t_size = params['t_size']
-
-    if 'bagging' in params:
-        fitness_func = params['fitness_function']
-        curr_ensemble = params['current_ensemble']
+    curr_ensemble = params['ensemble']
 
     # Initalise primitives
     pset = get_pset(num_args=X.shape[1])
@@ -60,7 +79,7 @@ def gp_member_generation(X,y, params, seed):
     creator.create("Individual", gp.PrimitiveTree, fitness=creator.FitnessMax)
 
     # Initalise tool box
-    toolbox = get_toolbox(pset, t_size, max_depth, X, y)
+    toolbox = get_toolbox(pset, t_size, max_depth, X, y, curr_ensemble)
 
     # Run GP
     pop = toolbox.population(n=p_size)
@@ -77,42 +96,43 @@ def gp_member_generation(X,y, params, seed):
     mstats.register("max", np.max)
     logbook = tools.Logbook()
     logbook.header = ['gen', 'nevals'] + (mstats.fields if mstats else [])
-
-    # Evolution process 
     for gen in range(1, ngen + 1):
-        
-        #if verbose:
-            #print(f'Generation {gen}/{ngen}')
-        
-        
-
-        # Select the next generation individuals
+        print(f'gen = {gen}')
         offspring_a = toolbox.select(pop, len(pop))
-
-        # Vary the pool of individuals
         offspring_a = varAnd(offspring_a, toolbox, pc, pm)
-
-        # Update pop a
         invalid_ind = [ind for ind in offspring_a if not ind.fitness.valid]
         fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
         for ind, fit in zip(invalid_ind, fitnesses):
             ind.fitness.values = fit
-
-        # Update the hall of fame with the generated individuals
         if halloffame is not None:
             halloffame.update(offspring_a)
-
-
-        # Replace the current population by the offspring
         pop[:] = offspring_a
-
-        # Append the current generation statistics to the logbook
         record = mstats.compile(pop) if mstats else {}
         logbook.record(gen=gen, nevals=len(invalid_ind), **record)
         if verbose:
             print(logbook.stream)
-
     df = pd.DataFrame(logbook)
     return [toolbox.compile(ind) for ind in pop], df, [str(ind) for ind in pop]
+
+
+#######################################################################################################################
+# Bagging 
+#######################################################################################################################
+
+def divbagging_member_generation(X, y, params, seed): # this is going to call the innergp a few times. 
+    ncycles  = 5
+    batch_size = 100
+    ensemble = []
+    for c in range(ncycles):
+        print(f'cycle = {c}')
+        # evolve the ensemble for this cycle
+        idx = np.random.choice(np.arange(len(X)), batch_size, replace=False)
+        Xsubset = X[idx]
+        ysubset = y[idx]
+        params['ensemble'] = ensemble
+        pop, _, _ = gp_member_generation(Xsubset, ysubset, params, seed+c)
+        sorted_pop = sorted(pop, key=lambda member : accuracy(y, GP_predict(member, X)), reverse=True) # DESCENDING 
+        ensemble.append(sorted_pop[0])
+    return ensemble
 
 

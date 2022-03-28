@@ -57,6 +57,7 @@ def single_predict(learner, x):
         res = 0
     return res
 
+
 def array_predict(learner, X):
     vfunc = np.vectorize(learner)
     return vfunc(X)
@@ -71,6 +72,7 @@ def GP_predict(learner, X):
     Returns:
         np.array  : (n_datapoints, )
     """
+    assert(type(learner) != list)
     result = []
     for x in X:
         result.append(single_predict(learner,x))

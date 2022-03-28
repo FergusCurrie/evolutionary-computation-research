@@ -82,7 +82,7 @@ def run(jobid : int, taskid : int, name : str):
         results.append([True] + [True] + [seed] + [end - start] + training_results)
         results.append([True] + [False] + [seed] + [end - start] + test_results)
         # Save the models 
-        model.ensemble_save(jobid, taskid, seed, 'gen')
+        #model.ensemble_save(jobid, taskid, seed, 'gen')
 
         # Member Selection
         start = time.time()
@@ -97,7 +97,7 @@ def run(jobid : int, taskid : int, name : str):
         model.ensemble_save(jobid, taskid, seed, 'sel')
 
         # Save history
-        model.history.to_csv(f'task_store/history_{i}_{name}_job_{jobid}_task_{taskid}_{dataset_name}.csv')
+        #model.history.to_csv(f'task_store/history_{i}_{name}_job_{jobid}_task_{taskid}_{dataset_name}.csv')
 
     # Saving result - and History
     df = pd.DataFrame(data=results, columns = ['member_generation','training', 'seed', 'time', 'full_acc', 'majority_acc', 'minority_acc', 'tn', 'fp', 'fn', 'tp'])

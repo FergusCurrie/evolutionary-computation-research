@@ -117,7 +117,7 @@ def gp_mo_member_generation(X, y, params, seed):
             ind.fitness.values = fit
 
         # Replace the current population by the offspring
-        pop[:] = offspring_a
+        pop[:] = offspring_a + pop
 
         # Append the current generation statistics to the logbook
         record = mstats.compile(pop) if mstats else {}
