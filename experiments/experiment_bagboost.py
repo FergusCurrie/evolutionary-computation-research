@@ -50,7 +50,7 @@ def get_experiment_bagboost_experiment():
         "ngen": 100, 
         "verbose": False, 
         "t_size": 7, 
-        'batch_size':1100,
+        'batch_size':100,
         'radius': 1, # radius of the niche
         'capacity': 1 # number of winners in a niche 
     }

@@ -133,6 +133,5 @@ def divbagging_member_generation(X, y, params, seed): # this is going to call th
         pop, _, _ = gp_member_generation(Xsubset, ysubset, params, seed+c)
         sorted_pop = sorted(pop, key=lambda member : accuracy(y, GP_predict(member, X)), reverse=True) # DESCENDING 
         ensemble.append(sorted_pop[0])
-    return ensemble
-
+    return ensemble, pd.DataFrame(data=[]), [str(ind) for ind in ensemble]
 
