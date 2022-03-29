@@ -94,8 +94,11 @@ def gp_member_generation(X,y, params, seed):
     mstats.register("std", np.std)
     mstats.register("min", np.min)
     mstats.register("max", np.max)
+
     logbook = tools.Logbook()
     logbook.header = ['gen', 'nevals'] + (mstats.fields if mstats else [])
+    df_data = []
+
     for gen in range(1, ngen + 1):
         print(f'gen = {gen}')
         offspring_a = toolbox.select(pop, len(pop))
@@ -107,12 +110,12 @@ def gp_member_generation(X,y, params, seed):
         if halloffame is not None:
             halloffame.update(offspring_a)
         pop[:] = offspring_a
-        record = mstats.compile(pop) if mstats else {}
-        logbook.record(gen=gen, nevals=len(invalid_ind), **record)
-        if verbose:
-            print(logbook.stream)
-    df = pd.DataFrame(logbook)
-    return [toolbox.compile(ind) for ind in pop], df, [str(ind) for ind in pop]
+
+        # Logging 
+        record = mstats.compile(pop) 
+        df_data.append(list(record['fitness'].values()) + list(record['size'].values()))
+
+    return [toolbox.compile(ind) for ind in pop], pd.DataFrame(data=df_data), [str(ind) for ind in pop]
 
 
 #######################################################################################################################
@@ -130,7 +133,8 @@ def divbagging_member_generation(X, y, params, seed): # this is going to call th
         Xsubset = X[idx]
         ysubset = y[idx]
         params['ensemble'] = ensemble
-        pop, _, _ = gp_member_generation(Xsubset, ysubset, params, seed+c)
+        pop, df, _ = gp_member_generation(Xsubset, ysubset, params, seed+c)
+        print(df)
         sorted_pop = sorted(pop, key=lambda member : accuracy(y, GP_predict(member, X)), reverse=True) # DESCENDING 
         ensemble.append(sorted_pop[0])
     return ensemble, pd.DataFrame(data=[]), [str(ind) for ind in ensemble]

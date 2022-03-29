@@ -111,7 +111,7 @@ def divnichegp_member_generation(X,y, params, seed):
     mstats.register("max", np.max)
     logbook = tools.Logbook()
     logbook.header = ['gen', 'nevals'] + (mstats.fields if mstats else [])
-
+    df_data=[]
     # Generation 
     for gen in range(1, ngen + 1):
         # First take a sample from training 
@@ -137,11 +137,7 @@ def divnichegp_member_generation(X,y, params, seed):
         
         pop[:] = offspring_a
         record = mstats.compile(pop) if mstats else {}
-        logbook.record(gen=gen, nevals=len(invalid_ind), **record)
-        if verbose:
-            print(logbook.stream)
-    df = pd.DataFrame(logbook)
-
+        df_data.append(list(record['fitness'].values()) + list(record['size'].values()))
 
     # Apply greedy member selection algorithm
-    return [toolbox.compile(ind) for ind in pop], df, [str(ind) for ind in pop]
+    return [toolbox.compile(ind) for ind in pop], pd.DataFrame(data=df_data), [str(ind) for ind in pop]
