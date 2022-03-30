@@ -19,7 +19,7 @@ import numpy as np
 
 def get_experiment__mogpdiv_experiment():
     # name
-    exp_name = "mogpdiv_experiment"
+    exp_name = "divmogp_experiment"
 
     # Datasets
     datasets = {'ionosphere':get_data("ionosphere"), 
