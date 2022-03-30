@@ -11,11 +11,15 @@ Member generaton:
     - GP
     - MOGP
     - OrMOGP
+    - PFMOGP
+    - NCLMOGP
 Member Selection:
     - greedyEnsemble
     - offEEL
+    - RPF
 DecisionFusion:
-    -Voting
+    - Voting
+    - Weighted Voting
 
 
 Experiments are defined in experiments/, they define a model, datasets and parameter setting.
@@ -29,3 +33,14 @@ To run on grid :
  5. Run submission command : $qsub -t 1-n_tasks:1 -M currieferg@ecs.vuw.ac.nz -m be submission_script-task_array.sh 
  6. When its done push back
 
+
+Jobs should save as so:
+/task_store
+    /jobid1
+        /taskid1
+            _.csv
+            _.csv
+        /taskid2
+    /jobid2
+        /taskid3
+        /taskid4

@@ -9,6 +9,7 @@ from experiments.get_experiment import get_experiment
 import pandas as pd
 import sys
 import time
+import os 
 
 
 def select_task(taskid : int, experiment : dict):
@@ -45,6 +46,13 @@ def run(jobid : int, taskid : int, name : str):
         jobid (int): Which job. A job is the number corresponding to the experiment (differnet grid runs of same exp have diff job ids). 
         taskid (int): Which task within experiment. A task is a combination of a model, a set of parameters and a dataset. 
     """
+    # first make file system
+    if not os.path.isdir(f'task_store/{jobid}'):
+        os.mkdir(f'task_store/{jobid}')
+    d = f'task_store/{jobid}/{taskid}/'
+    os.mkdir(d)
+    
+
     nseeds = 30
     results = []
 
@@ -94,13 +102,13 @@ def run(jobid : int, taskid : int, name : str):
         test_results = model.ensemble_evaluation(X_test, y_test, metrics) # comes back as [[training, seed , tpr, ..]]
         results.append([False] + [True] + [seed] + [end - start] + training_results)
         results.append([False] + [False] + [seed] + [end - start] + test_results)
-        model.ensemble_save(jobid, taskid, seed, 'sel')
+        #model.ensemble_save(jobid, taskid, seed, 'sel')
 
         # Save history
         #model.history.to_csv(f'task_store/history_{i}_{name}_job_{jobid}_task_{taskid}_{dataset_name}.csv')
 
     # Saving result - and History
     df = pd.DataFrame(data=results, columns = ['member_generation','training', 'seed', 'time', 'full_acc', 'majority_acc', 'minority_acc', 'tn', 'fp', 'fn', 'tp'])
-    df.to_csv(f"task_store/{name}_job_{jobid}_task_{taskid}_{dataset_name}.csv", index=False)
+    df.to_csv(f"{d}{name}_job_{jobid}_task_{taskid}_{dataset_name}.csv", index=False)
 
 

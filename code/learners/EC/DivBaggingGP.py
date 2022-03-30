@@ -100,7 +100,7 @@ def gp_member_generation(X,y, params, seed):
     df_data = []
 
     for gen in range(1, ngen + 1):
-        print(f'gen = {gen}')
+        #print(f'gen = {gen}')
         offspring_a = toolbox.select(pop, len(pop))
         offspring_a = varAnd(offspring_a, toolbox, pc, pm)
         invalid_ind = [ind for ind in offspring_a if not ind.fitness.valid]
@@ -127,15 +127,15 @@ def divbagging_member_generation(X, y, params, seed): # this is going to call th
     batch_size = params['batch_size']
     ensemble = []
     for c in range(ncycles):
-        print(f'cycle = {c}')
+        #print(f'cycle = {c}')
         # evolve the ensemble for this cycle
         idx = np.random.choice(np.arange(len(X)), batch_size, replace=False)
         Xsubset = X[idx]
         ysubset = y[idx]
         params['ensemble'] = ensemble
         pop, df, _ = gp_member_generation(Xsubset, ysubset, params, seed+c)
-        print(df)
+        #print(df)
         sorted_pop = sorted(pop, key=lambda member : accuracy(y, GP_predict(member, X)), reverse=True) # DESCENDING 
         ensemble.append(sorted_pop[0])
-    return ensemble, pd.DataFrame(data=[]), [str(ind) for ind in ensemble]
+    return ensemble, df, [str(ind) for ind in ensemble]
 
