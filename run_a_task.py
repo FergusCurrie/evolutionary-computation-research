@@ -47,9 +47,9 @@ def run(jobid : int, taskid : int, name : str):
         taskid (int): Which task within experiment. A task is a combination of a model, a set of parameters and a dataset. 
     """
     # first make file system
-    if not os.path.isdir(f'task_store/{jobid}'):
-        os.mkdir(f'task_store/{jobid}')
-    d = f'task_store/{jobid}/{taskid}/'
+    if not os.path.isdir(f'results_file/{jobid}'):
+        os.mkdir(f'results_file/{jobid}')
+    d = f'results_file/{jobid}/{taskid}/'
     os.mkdir(d)
     
 
@@ -105,7 +105,7 @@ def run(jobid : int, taskid : int, name : str):
         #model.ensemble_save(jobid, taskid, seed, 'sel')
 
         # Save history
-        #model.history.to_csv(f'task_store/history_{i}_{name}_job_{jobid}_task_{taskid}_{dataset_name}.csv')
+        #model.history.to_csv(f'results_file/history_{i}_{name}_job_{jobid}_task_{taskid}_{dataset_name}.csv')
 
     # Saving result - and History
     df = pd.DataFrame(data=results, columns = ['member_generation','training', 'seed', 'time', 'full_acc', 'majority_acc', 'minority_acc', 'tn', 'fp', 'fn', 'tp'])

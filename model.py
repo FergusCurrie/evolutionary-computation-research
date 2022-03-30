@@ -66,7 +66,7 @@ class Model:
         # https://deap.readthedocs.io/en/master/api/gp.html#deap.gp.PrimitiveTree.from_string
 
         for i,learner in enumerate(self.ensemble):
-            text_file = open(f"task_store/model_{i}_{jobid}_{taskid}_{seed}.txt", "w")
+            text_file = open(f"results_file/model_{i}_{jobid}_{taskid}_{seed}.txt", "w")
             text_file.write(self.ensemblestr[i])
             text_file.close()
         """

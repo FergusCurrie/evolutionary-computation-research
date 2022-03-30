@@ -35,7 +35,7 @@ To run on grid :
 
 
 Jobs should save as so:
-/task_store
+/results_file
     /jobid1
         /taskid1
             _.csv

@@ -87,6 +87,6 @@ ls -la
 #  noting that we need to distinguish between the TASKS
 #  (really should check that directory exists too, but this is just a test)
 #
-cp -a task_store/* /vol/grid-solar/sgeusers/currieferg/Implementations/task_store/
+cp -a results_file/* /vol/grid-solar/sgeusers/currieferg/Implementations/results_file/
 #
 echo "Ran through OK"
