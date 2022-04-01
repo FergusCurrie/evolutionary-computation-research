@@ -27,6 +27,7 @@ def get_experiment__mogpdiv_experiment():
                 'cleveland' : get_data('cleveland'), 
                 'wisconsin' : get_data('wisconsin_breast_cancer')}
 
+
     # Metrics
     metrics = [binary_metric]
 
@@ -66,6 +67,7 @@ def get_experiment__mogpdiv_experiment():
     )
 
     # PFMOGP
+    #PFMOGP_params_1 = {"p_size": 500, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 50, "verbose": False}
     PFMOGP_params_1 = {"p_size": 500, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 50, "verbose": False}
     PFMOGP_params = [PFMOGP_params_1]
     PFMOGP_model = Model(

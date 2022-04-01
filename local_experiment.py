@@ -13,8 +13,7 @@ from code.learners.EC.DivNicheGP import divnichegp_member_generation
 
 from code.learners.EC.NCLMOGP import nclmo_member_generation
 from code.learners.EC.PFMOGP import pfmo_member_generation
-
-
+import random 
 
 
 if True: # normal experiment 
@@ -24,6 +23,7 @@ if True: # normal experiment
     experiment = get_experiment(name)   
     print(f'number of tasks : {experiment["n_tasks"]}')
 
+    jobid= random.random()
 
     #for i in range(experiment['n_tasks']):
-        #run(1, i+1, name)
+        #run(jobid, i+1, name, nseeds=1)

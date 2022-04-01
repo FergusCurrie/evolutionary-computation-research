@@ -43,11 +43,11 @@ def get_experiment_bagboost_experiment():
 
     # NichingGP
     nich_params_1 = {
-        "p_size": 500, 
+        "p_size": 50,  # 500
         "max_depth": 5, 
         "pc": 0.6, 
         "pm": 0.4, 
-        "ngen": 100, 
+        "ngen": 5,  # 100
         "verbose": False, 
         "t_size": 7, 
         'batch_size':100,
@@ -55,7 +55,7 @@ def get_experiment_bagboost_experiment():
         'capacity': 1 # number of winners in a niche 
     }
 
-    nich_params = [nich_params_1]
+    nich_params = [nich_params_1,nich_params_1]
     nich_model = Model(
         member_generation_func=divnichegp_member_generation,
         member_selection_func=greedyEnsemble, # offEEl
@@ -65,7 +65,8 @@ def get_experiment_bagboost_experiment():
     )
 
     # Combine models into list
-    models = [bag_model, nich_model]
+    #models = [bag_model, nich_model]
+    models = [nich_model]
     ########################################################################################################################
 
     # Calculat number of tasks

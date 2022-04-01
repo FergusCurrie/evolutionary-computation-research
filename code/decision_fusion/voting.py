@@ -12,6 +12,8 @@ def binary_voting(ypred : np.array) -> np.array:
     Returns:
         np.array: 1d array of predictions with shape (n_datapoints)
     """
+    print(type(ypred))
+    print(ypred.shape)
     avg = np.sum(ypred, axis=0) / ypred.shape[0]
     avg[avg >= 0.5] = 1
     avg[avg < 0.5] = 0

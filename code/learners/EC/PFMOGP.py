@@ -69,6 +69,7 @@ def pfmo_member_generation(X, y, params, seed):
     ngen = params["ngen"]
     verbose = params["verbose"]
     p_size = params["p_size"]
+    print(f'psize={p_size}')
 
     # Initalise primitives
     pset = get_pset(num_args=X.shape[1])
@@ -108,10 +109,10 @@ def pfmo_member_generation(X, y, params, seed):
     for gen in range(1, ngen + 1):
         print(gen)
         # Select the next generation individuals
-        offspring_a = toolbox.select(pop, len(pop))
+        #offspring_a = toolbox.select(pop, p_size)
 
         # Vary the pool of individuals
-        offspring_a = varAnd(offspring_a, toolbox, pc, pm)
+        offspring_a = varAnd(pop, toolbox, pc, pm)
 
         # Update pop a
         invalid_ind = [ind for ind in offspring_a if not ind.fitness.valid]
@@ -120,7 +121,7 @@ def pfmo_member_generation(X, y, params, seed):
             ind.fitness.values = fit
 
         # Replace the current population by the offspring
-        pop[:] = offspring_a + pop
+        pop[:] = toolbox.select(offspring_a + pop, p_size)
 
         # Append the current generation statistics to the logbook
         record = mstats.compile(pop) if mstats else {}

@@ -36,7 +36,7 @@ def select_task(taskid : int, experiment : dict):
 # Unpack arguments
 
 
-def run(jobid : int, taskid : int, name : str): 
+def run(jobid : int, taskid : int, name : str, nseeds = 30): 
     """
     Run a single task. 
 
@@ -53,7 +53,6 @@ def run(jobid : int, taskid : int, name : str):
     os.mkdir(d)
     
 
-    nseeds = 30
     results = []
 
     # Load Experiment
@@ -82,6 +81,7 @@ def run(jobid : int, taskid : int, name : str):
 
         # Member generation 
         model.member_generation(X_train, y_train, seed)
+        print('member generation finished')
         end = time.time()
         # Evaluation - post generation
         metrics = experiment["metrics"]

@@ -197,10 +197,10 @@ def gp_ormo_member_generation(X, y, params, seed):
     # Evolution process 
     for gen in range(1, ngen + 1):
         # Select the next generation individuals
-        offspring_a = toolbox.select(pop, len(pop))
+        offspring_a = toolbox.select(pop, p_size)
 
         # Vary the pool of individuals
-        offspring_a = varAnd(offspring_a, toolbox, pc, pm)
+        offspring_a = varAnd(pop, toolbox, pc, pm)
         
         # Update population diversity
         pop_diversity = calculate_diversity_dict(pop, toolbox, X, y)
@@ -212,7 +212,7 @@ def gp_ormo_member_generation(X, y, params, seed):
             ind.fitness.values = fit
 
         # Replace the current population by the offspring
-        pop[:] = offspring_a + pop
+        pop[:] = toolbox.select(offspring_a + pop, p_size)
 
         # Append the current generation statistics to the logbook
         record = mstats.compile(pop) if mstats else {}

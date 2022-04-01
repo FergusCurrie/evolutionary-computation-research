@@ -18,8 +18,8 @@ class Model:
         self.member_generation_func = member_generation_func
         self.member_selection_func = member_selection_func
         self.decsion_fusion_func = decision_fusion_func
-        self.params = params
-        self.active_param = None # ?
+        self.params = params # all parameter dicts in this model type = list(dict)
+        self.active_param = None # current inersation patarmeter dict. type = dict
         self.ensemble = None #self.run(X, y)
         self.pred_func = pred_func
         self.history = None
@@ -29,7 +29,7 @@ class Model:
         # Generate ensemble 
         T, self.history, self.ensemblestr = self.member_generation_func(X, y, self.active_param, seed) # an ensemble should be a list of functions 
 
-
+        print(T)
         # Convert ensemble into learner obkjects 
         self.ensemble = [Learner(member, self.pred_func) for member in T]
 
@@ -38,13 +38,14 @@ class Model:
         if self.member_selection_func == None:
             return
 
-        self.ensemble = self.member_selection_func(self.ensemble, X, y, self.decsion_fusion_func)
+        self.ensemble = self.member_selection_func(self.ensemble, X, y, self.decsion_fusion_func, self.active_param)
 
     def ensemble_evaluation(self, X : np.array, y: np.array, metrics : list) -> list:
 
+        print(X.shape)
         # First calculate raw predicitons
         raw_ypred = np.array([learner.predict(X) for learner in self.ensemble])
-
+        print(raw_ypred)
         # Then calculate true predictions with decision function
         ypred = self.decsion_fusion_func(raw_ypred)
 
