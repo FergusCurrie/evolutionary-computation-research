@@ -18,7 +18,7 @@ import random
 
 if True: # normal experiment 
     #name = 'full_experiment'
-    name = 'divmogp_experiment'
+    name = 'bagboost_experiment'
 
     experiment = get_experiment(name)   
     print(f'number of tasks : {experiment["n_tasks"]}')

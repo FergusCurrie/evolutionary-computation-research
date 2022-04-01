@@ -43,14 +43,14 @@ def get_experiment_bagboost_experiment():
 
     # NichingGP
     nich_params_1 = {
-        "p_size": 50,  # 500
+        "p_size": 500,  # 500
         "max_depth": 5, 
         "pc": 0.6, 
         "pm": 0.4, 
-        "ngen": 5,  # 100
+        "ngen": 100,  # 100
         "verbose": False, 
         "t_size": 7, 
-        'batch_size':100,
+        'batch_size':100,# bs?
         'radius': 1, # radius of the niche
         'capacity': 1 # number of winners in a niche 
     }
@@ -65,8 +65,8 @@ def get_experiment_bagboost_experiment():
     )
 
     # Combine models into list
-    #models = [bag_model, nich_model]
-    models = [nich_model]
+    models = [bag_model, nich_model]
+    #models = [nich_model]
     ########################################################################################################################
 
     # Calculat number of tasks
