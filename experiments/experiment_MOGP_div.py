@@ -42,6 +42,7 @@ def get_experiment__mogpdiv_experiment():
         decision_fusion_func=binary_voting,
         params=GP_params,
         pred_func=GP_predict,
+        model_name='GP'
     )
     
     # MOGP
@@ -53,6 +54,7 @@ def get_experiment__mogpdiv_experiment():
         decision_fusion_func=binary_voting,
         params=MOGP_params,
         pred_func=GP_predict,
+        model_name='MOGP'
     )
 
     # NCLMOGP
@@ -64,10 +66,10 @@ def get_experiment__mogpdiv_experiment():
         decision_fusion_func=binary_voting,
         params=NCLMOGP_params,
         pred_func=GP_predict,
+        model_name = 'NCLMOGP'
     )
 
     # PFMOGP
-    #PFMOGP_params_1 = {"p_size": 500, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 50, "verbose": False}
     PFMOGP_params_1 = {"p_size": 500, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 50, "verbose": False}
     PFMOGP_params = [PFMOGP_params_1]
     PFMOGP_model = Model(
@@ -76,6 +78,7 @@ def get_experiment__mogpdiv_experiment():
         decision_fusion_func=binary_voting,
         params=PFMOGP_params,
         pred_func=GP_predict,
+        model_name = 'PFMOGP'
     )
 
 
@@ -86,7 +89,7 @@ def get_experiment__mogpdiv_experiment():
     # Calculat number of tasks
     n_tasks = 0
     for model in models:
-        n_tasks += len(datasets) * len(model.params)
+        n_tasks += len(datasets) * len(model.params)     
 
     return {"datasets": datasets, "metrics": metrics, "models": models, "n_tasks": n_tasks, "name": exp_name}
     #return {"datasets": [datasets[0]], "metrics": [metrics[0]], "models": [models[0]], "n_tasks": 1, "name": [exp_name[0]]}

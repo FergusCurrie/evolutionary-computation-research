@@ -38,6 +38,7 @@ def get_experiment_bagboost_experiment():
         decision_fusion_func=binary_voting,
         params=bag_params,
         pred_func=GP_predict,
+        model_name = 'baggp'
     )
 
 
@@ -62,6 +63,7 @@ def get_experiment_bagboost_experiment():
         decision_fusion_func=binary_voting,
         params=nich_params,
         pred_func=GP_predict,
+        model_name = 'nichgp'
     )
 
     # Combine models into list

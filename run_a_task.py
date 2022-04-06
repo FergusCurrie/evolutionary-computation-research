@@ -12,7 +12,7 @@ import time
 import os 
 
 
-def select_task(taskid : int, experiment : dict):
+def select_task(jobid : int, taskid : int, experiment : dict):
     """
     Method for selecting current task out of all tasks in job.
 
@@ -27,7 +27,12 @@ def select_task(taskid : int, experiment : dict):
     for model in experiment["models"]:
         for param in model.params:
             for dataset_name in experiment["datasets"].keys():
-                if i == int(taskid):
+                #print(taskid)
+                if i == int(taskid)-1: # minus 1 for index
+                    # now write to file 
+                    f = open(f"results_file/{jobid}/{taskid}/{jobid}_{taskid}_info.txt", "a")
+                    f.write(f"{taskid} : {model.model_name} , {dataset_name} , {param} \n")
+                    f.close()
                     return model, dataset_name, param
                 i += 1
     return None, None, None
@@ -62,7 +67,8 @@ def run(jobid : int, taskid : int, name : str, nseeds = 30):
 
     # Select correct task
     # Careful. Grid can't handle a task id of 1. Therefore we refer to a task from 1, but is index from 0. 
-    model, dataset_name, param = select_task(taskid-1, experiment)
+    model, dataset_name, param = select_task(jobid, taskid, experiment)
+    print(dataset_name)
     dataset = experiment["datasets"][dataset_name]
 
     # Select the active parameter

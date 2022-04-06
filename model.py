@@ -14,7 +14,7 @@ import numpy as np
 
 
 class Model: 
-    def __init__(self, member_generation_func, member_selection_func, decision_fusion_func, params, pred_func):
+    def __init__(self, member_generation_func, member_selection_func, decision_fusion_func, params, pred_func, model_name):
         self.member_generation_func = member_generation_func
         self.member_selection_func = member_selection_func
         self.decsion_fusion_func = decision_fusion_func
@@ -24,6 +24,7 @@ class Model:
         self.pred_func = pred_func
         self.history = None
         self.ensemblestr = None # save str representation of member generation sos that we can load later 
+        self.model_name = model_name
 
     def member_generation(self, X, y, seed):
         # Generate ensemble 
