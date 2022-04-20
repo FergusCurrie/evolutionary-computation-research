@@ -16,22 +16,19 @@ from code.learners.EC.deap_extra import GP_predict
 from code.metrics.classification_metrics import binary_metric
 from code.member_selection.offEEL import offEEL
 
-def get_experiment_bagboost_experiment():
+def get_fast_bagboost_experiment():
     # name
-    exp_name = "bagboost_experiment"
+    exp_name = "fast_bagboost_experiment"
 
     # Datasets
-    datasets = {'ionosphere':get_data("ionosphere"), 
-                'mammo_graphic' : get_data("mammo_graphic"), 
-                'cleveland' : get_data('cleveland'), 
-                'wisconsin' : get_data('wisconsin_breast_cancer')}
+    datasets = {'spec':get_data("spec")}
 
     # Metrics
     metrics = [binary_metric]
 
     # MODELS ###############################################################################################################
     # BaggingGP
-    bag_params_1 = {"p_size": 500, "max_depth": 5, "pc": 0.6, "pm": 0.4, "ngen": 20, "verbose": False, "t_size": 7, 'ncycles':5, 'batch_size':100}
+    bag_params_1 = {"p_size": 5, "max_depth": 5, "pc": 0.6, "pm": 0.4, "ngen": 2, "verbose": False, "t_size": 7, 'ncycles':2, 'batch_size':100}
     bag_params = [bag_params_1]
     bag_model = Model(
         member_generation_func=divbagging_member_generation,
@@ -45,11 +42,11 @@ def get_experiment_bagboost_experiment():
 
     # NichingGP
     nich_params_1 = {
-        "p_size": 500,  # 500
+        "p_size": 5,  # 500
         "max_depth": 5, 
         "pc": 0.6, 
         "pm": 0.4, 
-        "ngen": 100,  # 100
+        "ngen": 2,  # 100
         "verbose": False, 
         "t_size": 7, 
         'batch_size':100,# bs?
@@ -72,18 +69,17 @@ def get_experiment_bagboost_experiment():
         "max_depth": 5, 
         "pc": 0.6, 
         "pm": 0.4, 
-        "ngen": 10,  # 100
+        "ngen": 2,  # 100
         "verbose": False, 
         "t_size": 7,
         "nspecies": 5,
-        'species_size': 
-        500,
+        'species_size': 5,
     }
     ccgp_model = Model(
         member_generation_func=ccgp_member_generation,
         member_selection_func=greedyEnsemble, # offEEl
         decision_fusion_func=binary_voting,
-        params=ccgp_params_1,
+        params=[ccgp_params_1],
         pred_func=GP_predict,
         model_name = 'ccgp'
     )

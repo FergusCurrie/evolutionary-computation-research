@@ -26,8 +26,10 @@ if False:
 
 
 if True:
-    X = get_experiment('bagboost_experiment')
-    for i in range(X['n_tasks']):
-        run(69, i+1, 'bagboost_experiment')
+    X = get_experiment('fast_bagboost_experiment')
+    print(X['n_tasks'])
+
+    #for i in range(X['n_tasks']):
+        #run(69, i+1, 'bagboost_experiment')
 
 

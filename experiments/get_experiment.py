@@ -7,8 +7,10 @@ from experiments.experiment_bagboost import get_experiment_bagboost_experiment
 
 from experiments.experiment_MOGP_div import get_experiment__mogpdiv_experiment
 
+from experiments.experiment_bagboost_fast import get_fast_bagboost_experiment
+
 def is_experiment(name : str) -> bool:
-    if name in ['bagboost_experiment', 'divmogp_experiment']:
+    if name in ['bagboost_experiment', 'divmogp_experiment', 'fast_bagboost_experiment']:
         return True
     return False
 
@@ -26,5 +28,7 @@ def get_experiment(name : str) -> dict:
         return get_experiment_bagboost_experiment()
     if name == 'divmogp_experiment':
         return get_experiment__mogpdiv_experiment()
+    if name == 'fast_bagboost_experiment':
+        return get_fast_bagboost_experiment()
     print('Experiment name error ')
     assert(1 == 0) # fail

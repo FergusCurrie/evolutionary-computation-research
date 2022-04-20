@@ -4,4 +4,5 @@
 
 4077539 = MOGP. All 16 ran. 
 
-= Bagboost with ccgp on all datasets. w
+4079838 = Bagboost with ccgp on all 10 datasets. Limitation is selecting number of representatives. 
+
