@@ -2,6 +2,8 @@
 Quick code for gp niching for multi-class classification
 
 Need to pull out the parameters for this. Go line by line because there are so many of them currently. 
+
+Could be same issues relating to replace=True rather than replace=False
 """
 
 
@@ -115,7 +117,7 @@ def divnichegp_member_generation(X,y, params, seed):
     # Generation 
     for gen in range(1, ngen + 1):
         # First take a sample from training 
-        idx = np.random.choice(np.arange(len(X)), batch_size, replace=False)
+        idx = np.random.choice(np.arange(len(X)), batch_size, replace=True)
         Xsubset = X[idx]
         ysubset = y[idx]
 

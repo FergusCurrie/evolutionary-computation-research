@@ -69,7 +69,7 @@ def run(jobid : int, taskid : int, name : str, nseeds = 30):
     # Careful. Grid can't handle a task id of 1. Therefore we refer to a task from 1, but is index from 0. 
     model, dataset_name, param = select_task(jobid, taskid, experiment)
     print(dataset_name)
-    dataset = experiment["datasets"][dataset_name]
+    dataset = experiment["datasets"][dataset_name] # none on dataset name ? 
 
     # Select the active parameter
     model.active_param = param

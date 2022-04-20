@@ -17,7 +17,7 @@ from code.metrics.classification_metrics import binary_metric, multi_class_metri
 from code.member_selection.offEEL import offEEL
 
 def get_experiment_bagboost_experiment():
-    # name
+    # nam
     exp_name = "bagboost_experiment"
     # print(datasets.keys())
     all_datasets = get_all_datasets()

@@ -129,7 +129,7 @@ def divbagging_member_generation(X, y, params, seed): # this is going to call th
     for c in range(ncycles):
         #print(f'cycle = {c}')
         # evolve the ensemble for this cycle
-        idx = np.random.choice(np.arange(len(X)), batch_size, replace=False)
+        idx = np.random.choice(np.arange(len(X)), batch_size, replace=True)
         Xsubset = X[idx]
         ysubset = y[idx]
         params['ensemble'] = ensemble

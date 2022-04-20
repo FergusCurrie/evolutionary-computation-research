@@ -1,5 +1,6 @@
 
 
+from re import L
 from code.data_processing import get_all_datasets, get_data
 from code.metrics.classification_metrics import accuracy
 from run_a_task import run
@@ -20,16 +21,10 @@ import random
 
 # MODELS ###############################################################################################################
 
-if False:
-    X, y = get_data('postop')
-    print(y)
 
+X = get_experiment('fast_bagboost_experiment')
 
-if True:
-    X = get_experiment('fast_bagboost_experiment')
-    print(X['n_tasks'])
-
-    #for i in range(X['n_tasks']):
-        #run(69, i+1, 'bagboost_experiment')
+for i in range(X['n_tasks']):
+    run(69, i+1, 'fast_bagboost_experiment')
 
 

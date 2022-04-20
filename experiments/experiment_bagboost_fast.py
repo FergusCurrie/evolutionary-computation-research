@@ -7,13 +7,13 @@ from code.member_selection.greedyEnsemble import greedyEnsemble
 sys.path.append("/")
 
 from model import Model
-from code.data_processing import get_data
+from code.data_processing import get_all_datasets, get_data
 from code.learners.EC.DivBaggingGP import divbagging_member_generation
 from code.learners.EC.DivNicheGP import divnichegp_member_generation
 
 from code.decision_fusion.voting import binary_voting
 from code.learners.EC.deap_extra import GP_predict
-from code.metrics.classification_metrics import binary_metric
+from code.metrics.classification_metrics import binary_metric, multi_class_metric
 from code.member_selection.offEEL import offEEL
 
 def get_fast_bagboost_experiment():
@@ -21,10 +21,13 @@ def get_fast_bagboost_experiment():
     exp_name = "fast_bagboost_experiment"
 
     # Datasets
-    datasets = {'spec':get_data("spec")}
+    all_datasets = get_all_datasets()
+    datasets = {}
+    for d in all_datasets:
+        datasets[d] = get_data(d)
 
     # Metrics
-    metrics = [binary_metric]
+    metrics = [multi_class_metric]
 
     # MODELS ###############################################################################################################
     # BaggingGP
@@ -77,7 +80,7 @@ def get_fast_bagboost_experiment():
     }
     ccgp_model = Model(
         member_generation_func=ccgp_member_generation,
-        member_selection_func=greedyEnsemble, # offEEl
+        member_selection_func=None, # offEEl
         decision_fusion_func=binary_voting,
         params=[ccgp_params_1],
         pred_func=GP_predict,

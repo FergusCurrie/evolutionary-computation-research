@@ -184,5 +184,5 @@ def get_all_datasets():
     # 'titanic' - dataset just has passenger id 
     # 'dresses' - rar file 
     # 'credit_default' - slow to load 
-    #return datasets
-    return ['spec']
+    return datasets
+    #return ['spec']
