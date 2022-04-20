@@ -81,10 +81,10 @@ def _yeast_load(fn : str) -> np.array:
 
 def _spec_load(fn : str) -> np.array:
     # Load training 
-    df1 = pd.read_csv(fn+'.TRAIN', header=None)
+    df1 = pd.read_csv(fn+'.train', header=None)
 
     # Load test
-    df2 = pd.read_csv(fn+'.TEST', header=None)
+    df2 = pd.read_csv(fn+'.test', header=None)
 
     # pd concat
     df = pd.concat([df1, df2], ignore_index=True) 
