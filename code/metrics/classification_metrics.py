@@ -1,5 +1,6 @@
 import numpy as np
 from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.metrics import multilabel_confusion_matrix
 
 def accuracy(y_true, y_pred):
     return accuracy_score(y_true, y_pred)
@@ -43,10 +44,22 @@ def ave(y, ypred, w=0.5):
 
 def binary_metric(ytrue, ypred):
     # full
+    
     full_cm = calculate_confusion_matrix(ytrue, ypred)
-    tn, fp, fn, tp = full_cm.ravel()
+    if full_cm.shape != (2,2):
+        full_cm = multilabel_confusion_matrix(ytrue, ypred)
+        print(full_cm.shape)
+    tn, fp, fn, tp = full_cm.ravel() # error here 8x8 confusion matrix
+
     full_acc = accuracy(ytrue, ypred)
     majority_acc = accuracy(ytrue[ytrue == 1], ypred[ytrue == 1])
     minority_acc = accuracy(ytrue[ytrue == 0], ypred[ytrue == 0])
 
     return [full_acc, majority_acc, minority_acc, tn, fp, fn, tp]
+
+def multi_class_metric(ytrue, ypred):
+    full_acc = accuracy(ytrue, ypred)
+    majority_acc = accuracy(ytrue[ytrue == 1], ypred[ytrue == 1])
+    minority_acc = accuracy(ytrue[ytrue == 0], ypred[ytrue == 0])
+
+    return [full_acc, majority_acc, minority_acc, -1, -1, -1, -1]

@@ -83,6 +83,8 @@ def run(jobid : int, taskid : int, name : str, nseeds = 30):
         start = time.time()
         seed = 169 * i
         print(f'Run number {i}/{nseeds}  ... seed = {seed} of {dataset_name}')
+        print(len(X))
+        print(len(y))
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=seed, stratify=y) # NOTICE STRATIFICATION
 
         # Member generation 

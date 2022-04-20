@@ -1,7 +1,7 @@
 mid,low,excellent,mid,stable,stable,stable,15,A
 mid,high,excellent,high,stable,stable,stable,10,S
 high,low,excellent,high,stable,stable,mod-stable,10,A
-mid,low,good,high,stable,unstable,mod-stable,15,A
+mid,low,good,high,stable,unstable,mod-stable,15,A 
 mid,mid,excellent,high,stable,stable,stable,10,A
 high,low,good,mid,stable,stable,unstable,15,S
 mid,low,excellent,high,stable,stable,mod-stable,05,S
@@ -44,6 +44,7 @@ high,high,good,high,unstable,stable,stable,15,S
 mid,mid,good,mid,stable,stable,stable,10,S
 low,low,excellent,mid,stable,stable,stable,10,A
 low,mid,good,mid,unstable,stable,stable,10,S
+low,mid,good,high,unstable,stable,stable,?,I
 mid,mid,excellent,mid,unstable,stable,stable,10,A
 high,high,excellent,high,stable,stable,unstable,?,A
 mid,high,good,low,unstable,stable,stable,10,A
@@ -79,6 +80,7 @@ mid,mid,excellent,mid,unstable,unstable,stable,10,S
 mid,mid,good,high,stable,stable,stable,10,A
 mid,mid,excellent,mid,stable,stable,stable,15,A
 mid,mid,excellent,mid,stable,stable,stable,10,S
+mid,low,good,mid,stable,stable,unstable,10,I
 high,mid,excellent,mid,unstable,stable,unstable,05,A
 mid,mid,excellent,mid,stable,stable,unstable,10,A
 mid,mid,excellent,mid,unstable,stable,stable,10,A
