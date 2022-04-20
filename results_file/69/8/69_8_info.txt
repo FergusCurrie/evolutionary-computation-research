@@ -1,1 +1,0 @@
-8 : baggp , postop , {'p_size': 5, 'max_depth': 5, 'pc': 0.6, 'pm': 0.4, 'ngen': 2, 'verbose': False, 't_size': 7, 'ncycles': 2, 'batch_size': 100} 
