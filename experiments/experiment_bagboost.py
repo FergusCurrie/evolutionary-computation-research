@@ -88,8 +88,8 @@ def get_experiment_bagboost_experiment():
 
 
     # Combine models into list
-    #models = [bag_model, nich_model, ccgp_model]
-    models = [ccgp_model]
+    models = [bag_model, nich_model, ccgp_model]
+    #models = [ccgp_model]
 
     ########################################################################################################################
 
