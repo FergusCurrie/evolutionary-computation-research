@@ -17,6 +17,7 @@ from code.learners.EC.NCLMOGP import nclmo_member_generation
 from code.learners.EC.PFMOGP import pfmo_member_generation
 import random 
 
+import random
 
 
 # MODELS ###############################################################################################################
@@ -25,6 +26,6 @@ import random
 X = get_experiment('fast_bagboost_experiment')
 
 for i in range(X['n_tasks']):
-    run(69, i+1, 'fast_bagboost_experiment')
+    run(random.randint(0,300), i+1, 'fast_bagboost_experiment')
 
 

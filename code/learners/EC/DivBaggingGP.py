@@ -13,6 +13,7 @@ from code.learners.EC.deap_extra import GP_predict, get_pset
 import pandas as pd 
 from code.decision_fusion.voting import binary_voting
 
+
     
 
 def get_toolbox(pset, t_size, max_depth, X, y, curr_ensemble):
@@ -114,6 +115,11 @@ def gp_member_generation(X,y, params, seed):
         # Logging 
         record = mstats.compile(pop) 
         df_data.append(list(record['fitness'].values()) + list(record['size'].values()))
+    
+
+    # nodes, edges, labels = gp.graph(pop[0])
+
+
 
     return [toolbox.compile(ind) for ind in pop], pd.DataFrame(data=df_data), [str(ind) for ind in pop]
 
@@ -137,5 +143,6 @@ def divbagging_member_generation(X, y, params, seed): # this is going to call th
         #print(df)
         sorted_pop = sorted(pop, key=lambda member : accuracy(y, GP_predict(member, X)), reverse=True) # DESCENDING 
         ensemble.append(sorted_pop[0])
+    
     return ensemble, df, [str(ind) for ind in ensemble]
 

@@ -23,8 +23,11 @@ def get_fast_bagboost_experiment():
     # Datasets
     all_datasets = get_all_datasets()
     datasets = {}
-    for d in all_datasets:
-        datasets[d] = get_data(d)
+
+    #for d in all_datasets:
+        #datasets[d] = get_data(d)
+
+    datasets["cleveland"] = get_data('cleveland')
 
     # Metrics
     metrics = [multi_class_metric]
@@ -89,7 +92,8 @@ def get_fast_bagboost_experiment():
 
 
     # Combine models into list
-    models = [bag_model, nich_model, ccgp_model]
+    #models = [bag_model, nich_model, ccgp_model]
+    models = [bag_model]
 
     ########################################################################################################################
 

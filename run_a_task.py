@@ -37,8 +37,12 @@ def select_task(jobid : int, taskid : int, experiment : dict):
                 i += 1
     return None, None, None
 
-
-# Unpack arguments
+def evaluation(X_train, y_train, X_test, y_test, model, mgen, metrics, seed, time):
+    training_results = model.ensemble_evaluation(X_train, y_train, metrics)
+    test_results = model.ensemble_evaluation(X_test, y_test, metrics) # comes back as [[training, seed , tpr, ..]]
+    a = [mgen] + [True] + [seed] + [time] + training_results
+    b = [mgen] + [False] + [seed] + [time] + test_results
+    return [a, b]
 
 
 def run(jobid : int, taskid : int, name : str, nseeds = 30): 
@@ -56,6 +60,8 @@ def run(jobid : int, taskid : int, name : str, nseeds = 30):
         os.mkdir(f'results_file/{jobid}')
     d = f'results_file/{jobid}/{taskid}/'
     os.mkdir(d)
+    os.mkdir(f'{d}/scoring')
+
     
 
     results = []
@@ -63,12 +69,11 @@ def run(jobid : int, taskid : int, name : str, nseeds = 30):
     # Load Experiment
     print(f'Running {name}')
     experiment = get_experiment(name) # experiment is now a dict
-
+    metrics = experiment["metrics"]
 
     # Select correct task
     # Careful. Grid can't handle a task id of 1. Therefore we refer to a task from 1, but is index from 0. 
     model, dataset_name, param = select_task(jobid, taskid, experiment)
-    print(dataset_name)
     dataset = experiment["datasets"][dataset_name] # none on dataset name ? 
 
     # Select the active parameter
@@ -80,40 +85,29 @@ def run(jobid : int, taskid : int, name : str, nseeds = 30):
 
     # Run for 30 seeds
     for i in range(nseeds):
-        start = time.time()
         seed = 169 * i
         print(f'Run number {i}/{nseeds}  ... seed = {seed} of {dataset_name}')
-        print(len(X))
-        print(len(y))
+
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=seed, stratify=y) # NOTICE STRATIFICATION
 
         # Member generation 
+        start = time.time()
         model.member_generation(X_train, y_train, seed)
-        print('member generation finished')
         end = time.time()
-        # Evaluation - post generation
-        metrics = experiment["metrics"]
-        training_results = model.ensemble_evaluation(X_train, y_train, metrics)
-        test_results = model.ensemble_evaluation(X_test, y_test, metrics) # comes back as [[training, seed , tpr, ..]]
-        results.append([True] + [True] + [seed] + [end - start] + training_results)
-        results.append([True] + [False] + [seed] + [end - start] + test_results)
-        # Save the models 
-        #model.ensemble_save(jobid, taskid, seed, 'gen')
+        results = results + evaluation(X_train, y_train, X_test, y_test, model=model, metrics=metrics, mgen=True, time=start - end, seed=seed)
 
         # Member Selection
         start = time.time()
         model.member_selection(X_train, y_train)
         end = time.time()
-        # Evaluation - post member selection 
-        metrics = experiment["metrics"]
-        training_results = model.ensemble_evaluation(X_train, y_train, metrics)
-        test_results = model.ensemble_evaluation(X_test, y_test, metrics) # comes back as [[training, seed , tpr, ..]]
-        results.append([False] + [True] + [seed] + [end - start] + training_results)
-        results.append([False] + [False] + [seed] + [end - start] + test_results)
-        #model.ensemble_save(jobid, taskid, seed, 'sel')
+        results = results + evaluation(X_train, y_train, X_test, y_test, model=model, metrics=metrics, mgen=True, time=start - end, seed=seed)
 
-        # Save history
-        #model.history.to_csv(f'results_file/history_{i}_{name}_job_{jobid}_task_{taskid}_{dataset_name}.csv')
+        # Compare members on scoring. 
+        raw_ypreds = model.get_member_ypreds(X_train, y_train)
+        df = pd.DataFrame(data=raw_ypreds.T, columns = [f'member_{x}' for x in range(model.get_number_selected())])
+        df.to_csv(f'{d}/scoring/SCORING_{name}_job_{jobid}_task_{taskid}_{dataset_name}_seed_{seed}.csv', index=False)
+
+
 
     # Saving result - and History
     df = pd.DataFrame(data=results, columns = ['member_generation','training', 'seed', 'time', 'full_acc', 'majority_acc', 'minority_acc', 'tn', 'fp', 'fn', 'tp'])

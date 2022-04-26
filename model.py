@@ -7,6 +7,7 @@ An algorithm is made of three steps : member generation, member selection, decis
 """
 from code.learners.learner import Learner
 import numpy as np
+from deap.gp import graph
 
 
 
@@ -30,7 +31,6 @@ class Model:
         # Generate ensemble 
         T, self.history, self.ensemblestr = self.member_generation_func(X, y, self.active_param, seed) # an ensemble should be a list of functions 
 
-        print(T)
         # Convert ensemble into learner obkjects 
         self.ensemble = [Learner(member, self.pred_func) for member in T]
 
@@ -43,10 +43,9 @@ class Model:
 
     def ensemble_evaluation(self, X : np.array, y: np.array, metrics : list) -> list:
 
-        print(X.shape)
         # First calculate raw predicitons
         raw_ypred = np.array([learner.predict(X) for learner in self.ensemble])
-        print(raw_ypred)
+
         # Then calculate true predictions with decision function
         ypred = self.decsion_fusion_func(raw_ypred)
 
@@ -54,6 +53,13 @@ class Model:
         results = [metric(y, ypred) for metric in metrics]
 
         return results[0] # change this latter 
+
+    def get_member_ypreds(self, X : np.array, y: np.array) -> np.array:
+        raw_ypred = np.array([learner.predict(X) for learner in self.ensemble])
+        return raw_ypred
+        
+    def get_number_selected(self):
+        return len(self.ensemble)
 
     def ensemble_save(self, jobid, taskid, seed, identifier=''):
         """[summary]
