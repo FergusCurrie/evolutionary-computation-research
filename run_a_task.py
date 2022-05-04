@@ -61,6 +61,7 @@ def run(jobid : int, taskid : int, name : str, nseeds = 30):
     d = f'results_file/{jobid}/{taskid}/'
     os.mkdir(d)
     os.mkdir(f'{d}/scoring')
+    os.mkdir(f'{d}/lisp_model')
 
     
 
@@ -106,6 +107,13 @@ def run(jobid : int, taskid : int, name : str, nseeds = 30):
         raw_ypreds = model.get_member_ypreds(X_train, y_train)
         df = pd.DataFrame(data=raw_ypreds.T, columns = [f'member_{x}' for x in range(model.get_number_selected())])
         df.to_csv(f'{d}/scoring/SCORING_{name}_job_{jobid}_task_{taskid}_{dataset_name}_seed_{seed}.csv', index=False)
+
+        # Save the model str
+        lisp_trees = model.get_member_strings()
+        for ff, tree in enumerate(lisp_trees):
+            f = open(f'{d}/lisp_model/member_{ff}_lisp.txt', "a")
+            f.write(tree)
+            f.close()
 
 
 

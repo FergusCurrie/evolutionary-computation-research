@@ -132,6 +132,7 @@ def divbagging_member_generation(X, y, params, seed): # this is going to call th
     ncycles  = params['ncycles']
     batch_size = params['batch_size']
     ensemble = []
+    es = [] # strings 
     for c in range(ncycles):
         #print(f'cycle = {c}')
         # evolve the ensemble for this cycle
@@ -139,10 +140,15 @@ def divbagging_member_generation(X, y, params, seed): # this is going to call th
         Xsubset = X[idx]
         ysubset = y[idx]
         params['ensemble'] = ensemble
-        pop, df, _ = gp_member_generation(Xsubset, ysubset, params, seed+c)
+        pop, df, s = gp_member_generation(Xsubset, ysubset, params, seed+c)
+        temp = []
+        for i in range(len(pop)):
+            temp.append([pop[i], df[i], s[i]])
+
         #print(df)
-        sorted_pop = sorted(pop, key=lambda member : accuracy(y, GP_predict(member, X)), reverse=True) # DESCENDING 
-        ensemble.append(sorted_pop[0])
+        sorted_pop = sorted(temp, key=lambda member : accuracy(y, GP_predict(member[0], X)), reverse=True) # DESCENDING 
+        ensemble.append(sorted_pop[0][0]) # complied lambda
+        es.append(sorted_pop[0][2]) # str of member 
     
-    return ensemble, df, [str(ind) for ind in ensemble]
+    return ensemble, df, es
 

@@ -93,7 +93,7 @@ def get_fast_bagboost_experiment():
 
     # Combine models into list
     #models = [bag_model, nich_model, ccgp_model]
-    models = [bag_model]
+    models = [bag_model, nich_model, ccgp_model]
 
     ########################################################################################################################
 

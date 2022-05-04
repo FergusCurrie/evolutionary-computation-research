@@ -26,6 +26,8 @@ class Model:
         self.history = None
         self.ensemblestr = None # save str representation of member generation sos that we can load later 
         self.model_name = model_name
+        self.deapensemble = None
+        self.deaptoolbox = None
 
     def member_generation(self, X, y, seed):
         # Generate ensemble 
@@ -57,6 +59,9 @@ class Model:
     def get_member_ypreds(self, X : np.array, y: np.array) -> np.array:
         raw_ypred = np.array([learner.predict(X) for learner in self.ensemble])
         return raw_ypred
+    
+    def get_member_strings(self):
+        return self.ensemblestr
         
     def get_number_selected(self):
         return len(self.ensemble)
