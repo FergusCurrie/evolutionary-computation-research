@@ -25,7 +25,8 @@ import random
 
 X = get_experiment('fast_bagboost_experiment')
 
+s = random.randint(0,300)
 for i in range(X['n_tasks']):
-    run(random.randint(0,300), i+1, 'fast_bagboost_experiment')
+    run(s, i+1, 'fast_bagboost_experiment')
 
 

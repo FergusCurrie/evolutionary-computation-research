@@ -46,5 +46,4 @@ def greedyEnsemble(ensemble : list, X : np.array, y : np.array, decision_fusion_
                 selected_ensemble = ens_temp
                 fitness_selected_ensemble = fitness_temp
 
-    print(f'this is the ensemble we selected! = {selected_ensemble}')
     return selected_ensemble

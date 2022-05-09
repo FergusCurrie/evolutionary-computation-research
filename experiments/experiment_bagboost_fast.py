@@ -3,6 +3,7 @@ Experiment testing baselines.
 """
 import sys
 from code.learners.EC.CCGP import ccgp_member_generation
+from code.learners.EC.GP import gp_member_generation
 from code.member_selection.greedyEnsemble import greedyEnsemble
 sys.path.append("/")
 
@@ -24,15 +25,27 @@ def get_fast_bagboost_experiment():
     all_datasets = get_all_datasets()
     datasets = {}
 
-    #for d in all_datasets:
-        #datasets[d] = get_data(d)
+    for d in all_datasets:
+        datasets[d] = get_data(d)
 
-    datasets["cleveland"] = get_data('cleveland')
+    #datasets["cleveland"] = get_data('cleveland')
 
     # Metrics
     metrics = [multi_class_metric]
 
     # MODELS ###############################################################################################################
+    GP_params_1 = {"p_size": 5, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 50, "verbose": False, "t_size": 7}
+
+    GP_params = [GP_params_1]
+    GP_model = Model(
+        member_generation_func=gp_member_generation,
+        member_selection_func=None, # offEEl
+        decision_fusion_func=binary_voting,
+        params=GP_params,
+        pred_func=GP_predict,
+        model_name='GP'
+    )
+    
     # BaggingGP
     bag_params_1 = {"p_size": 5, "max_depth": 5, "pc": 0.6, "pm": 0.4, "ngen": 2, "verbose": False, "t_size": 7, 'ncycles':2, 'batch_size':100}
     bag_params = [bag_params_1]
@@ -92,8 +105,8 @@ def get_fast_bagboost_experiment():
 
 
     # Combine models into list
-    #models = [bag_model, nich_model, ccgp_model]
-    models = [bag_model, nich_model, ccgp_model]
+    models = [GP_model, bag_model, nich_model, ccgp_model]
+    #models = [bag_model]
 
     ########################################################################################################################
 

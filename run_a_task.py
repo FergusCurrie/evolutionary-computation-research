@@ -95,18 +95,23 @@ def run(jobid : int, taskid : int, name : str, nseeds = 30):
         start = time.time()
         model.member_generation(X_train, y_train, seed)
         end = time.time()
-        results = results + evaluation(X_train, y_train, X_test, y_test, model=model, metrics=metrics, mgen=True, time=start - end, seed=seed)
+        results = results + evaluation(X_train, y_train, X_test, y_test, model=model, metrics=metrics, mgen=True, time=end - start, seed=seed)
 
         # Member Selection
         start = time.time()
         model.member_selection(X_train, y_train)
         end = time.time()
-        results = results + evaluation(X_train, y_train, X_test, y_test, model=model, metrics=metrics, mgen=True, time=start - end, seed=seed)
+        results = results + evaluation(X_train, y_train, X_test, y_test, model=model, metrics=metrics, mgen=False, time=end - start, seed=seed)
 
-        # Compare members on scoring. 
+        # Compare members on scoring TRAINING
         raw_ypreds = model.get_member_ypreds(X_train, y_train)
         df = pd.DataFrame(data=raw_ypreds.T, columns = [f'member_{x}' for x in range(model.get_number_selected())])
-        df.to_csv(f'{d}/scoring/SCORING_{name}_job_{jobid}_task_{taskid}_{dataset_name}_seed_{seed}.csv', index=False)
+        df.to_csv(f'{d}/scoring/SCORING_{name}_job_{jobid}_task_{taskid}_{dataset_name}_seed_{seed}_training.csv', index=False)
+
+        # Compare members on scoring TEST
+        raw_ypreds = model.get_member_ypreds(X_test, y_test)
+        df = pd.DataFrame(data=raw_ypreds.T, columns = [f'member_{x}' for x in range(model.get_number_selected())])
+        df.to_csv(f'{d}/scoring/SCORING_{name}_job_{jobid}_task_{taskid}_{dataset_name}_seed_{seed}_test.csv', index=False)
 
         # Save the model str
         lisp_trees = model.get_member_strings()
