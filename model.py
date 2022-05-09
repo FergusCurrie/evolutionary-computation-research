@@ -46,7 +46,7 @@ class Model:
     def ensemble_evaluation(self, X : np.array, y: np.array, metrics : list) -> list:
 
         # First calculate raw predicitons
-        raw_ypred = np.array([learner.predict(X) for learner in self.ensemble])
+        raw_ypred = np.array([learner.predict(X, np.unique(y)) for learner in self.ensemble])
 
         # Then calculate true predictions with decision function
         ypred = self.decsion_fusion_func(raw_ypred)
@@ -57,7 +57,7 @@ class Model:
         return results[0] # change this latter 
 
     def get_member_ypreds(self, X : np.array, y: np.array) -> np.array:
-        raw_ypred = np.array([learner.predict(X) for learner in self.ensemble])
+        raw_ypred = np.array([learner.predict(X, np.unique(y)) for learner in self.ensemble])
         return raw_ypred
     
     def get_member_strings(self):

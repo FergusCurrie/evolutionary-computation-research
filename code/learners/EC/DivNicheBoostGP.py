@@ -60,14 +60,14 @@ def fitness_calculation(individual, toolbox, X, y):
 
 # GP_predict(e1, X), GP_predict(e2, X)
 def clearing_method(pop, toolbox, X, y, radius, capacity):
-    sorted_ensemble = sorted(pop, key=lambda member : accuracy(y, GP_predict(toolbox.compile(expr=member), X)), reverse=True) # DESCENDING 
+    sorted_ensemble = sorted(pop, key=lambda member : accuracy(y, GP_predict(toolbox.compile(expr=member), X, np.unique(y))), reverse=True) # DESCENDING 
     for i in range(len(sorted_ensemble)):
         if sorted_ensemble[i].fitness.values[0] < np.inf:
             n = 0
             for j in range(i+1, len(pop), 1): # is this loop right? 
                 ce1 = toolbox.compile(expr=sorted_ensemble[i])
                 ce2 = toolbox.compile(expr=sorted_ensemble[j])
-                if (sorted_ensemble[j].fitness.values[0] < np.inf) and (difference(GP_predict(ce1, X), GP_predict(ce2, X)) < radius):
+                if (sorted_ensemble[j].fitness.values[0] < np.inf) and (difference(GP_predict(ce1, X, np.unique(y)), GP_predict(ce2, X, np.unique(y))) < radius):
                     if n < capacity:
                         n = n + 1
                     else:
@@ -156,7 +156,7 @@ def divnicheboostgp_member_generation(X,y, params, seed):
 
         # Calculate accuracy of ensemble on each input and set weight vector to inverse of this. - Must be normalised 
         # Calculated on full dataset 
-        ypred_raw = np.array([GP_predict(toolbox.compile(expr=member), X) for member in pop])
+        ypred_raw = np.array([GP_predict(toolbox.compile(expr=member), X, np.unique(y)) for member in pop])
         vote = binary_voting(ypred_raw)
         acc = accuracy(y, vote) # acc vectpr 
         er = 1 - acc # issue here 

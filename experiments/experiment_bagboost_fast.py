@@ -12,7 +12,7 @@ from code.data_processing import get_all_datasets, get_data
 from code.learners.EC.DivBaggingGP import divbagging_member_generation
 from code.learners.EC.DivNicheGP import divnichegp_member_generation
 
-from code.decision_fusion.voting import binary_voting
+from code.decision_fusion.voting import binary_voting, majority_voting
 from code.learners.EC.deap_extra import GP_predict
 from code.metrics.classification_metrics import binary_metric, multi_class_metric
 from code.member_selection.offEEL import offEEL
@@ -34,13 +34,13 @@ def get_fast_bagboost_experiment():
     metrics = [multi_class_metric]
 
     # MODELS ###############################################################################################################
-    GP_params_1 = {"p_size": 5, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 50, "verbose": False, "t_size": 7}
+    GP_params_1 = {"p_size": 5, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 2, "verbose": False, "t_size": 7}
 
     GP_params = [GP_params_1]
     GP_model = Model(
         member_generation_func=gp_member_generation,
         member_selection_func=None, # offEEl
-        decision_fusion_func=binary_voting,
+        decision_fusion_func=majority_voting,
         params=GP_params,
         pred_func=GP_predict,
         model_name='GP'
@@ -52,7 +52,7 @@ def get_fast_bagboost_experiment():
     bag_model = Model(
         member_generation_func=divbagging_member_generation,
         member_selection_func=None, # offEEl
-        decision_fusion_func=binary_voting,
+        decision_fusion_func=majority_voting,
         params=bag_params,
         pred_func=GP_predict,
         model_name = 'baggp'
@@ -76,7 +76,7 @@ def get_fast_bagboost_experiment():
     nich_model = Model(
         member_generation_func=divnichegp_member_generation,
         member_selection_func=greedyEnsemble, # offEEl
-        decision_fusion_func=binary_voting,
+        decision_fusion_func=majority_voting,
         params=nich_params,
         pred_func=GP_predict,
         model_name = 'nichgp'
@@ -97,7 +97,7 @@ def get_fast_bagboost_experiment():
     ccgp_model = Model(
         member_generation_func=ccgp_member_generation,
         member_selection_func=None, # offEEl
-        decision_fusion_func=binary_voting,
+        decision_fusion_func=majority_voting,
         params=[ccgp_params_1],
         pred_func=GP_predict,
         model_name = 'ccgp'

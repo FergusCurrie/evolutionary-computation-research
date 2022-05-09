@@ -45,16 +45,24 @@ def get_stats():
     mstats.register("min", np.min)
     return mstats
 
-def single_predict(learner, x):
+def single_predict(learner, x,unique_classes):
     '''
     does the unpacking here
     '''
-    res = 1
+    radius = 0.5 # size of the map prediction 
+    res = -1 # res will be 
     z = learner(*x) # unpack
-    if z >= 0:
-        res = 1
-    else:
-        res = 0
+    n_classes = len(unique_classes)
+    lowest_threshold = 0.3 * n_classes * -1
+    for i_class in range(n_classes):
+        if i_class == n_classes-1: # if we get to the limit on the positive side then we classify to infity here
+            res = i_class
+            break
+        if z < lowest_threshold + (i_class * (radius * 2)):
+            res = i_class
+            break
+
+    assert(res != -1)
     return res
 
 
@@ -62,12 +70,15 @@ def array_predict(learner, X):
     vfunc = np.vectorize(learner)
     return vfunc(X)
 
-def GP_predict(learner, X):
+
+
+def GP_predict(learner, X, n_classes):
     """GP learner is simply a lambda. However it takes 5 arguments. 
 
     Args:
         learner (lambda): [description]
         X ([type]): [description]
+        n : num thresholds 
 
     Returns:
         np.array  : (n_datapoints, )
@@ -75,7 +86,7 @@ def GP_predict(learner, X):
     assert(type(learner) != list)
     result = []
     for x in X:
-        result.append(single_predict(learner,x))
+        result.append(single_predict(learner,x, n_classes))
     result = np.array(result)
     assert(result.shape[0] == X.shape[0])
     return np.array(result)

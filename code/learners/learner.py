@@ -6,6 +6,6 @@ class Learner:
         self.learner = learner
         self.pred_func = pred_func
     
-    def predict(self, X : np.array) -> float:
-        return self.pred_func(self.learner, X)
+    def predict(self, X : np.array, y : int) -> float:
+        return self.pred_func(self.learner, X, y)
     

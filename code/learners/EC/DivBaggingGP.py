@@ -45,7 +45,7 @@ def bagging_fitness_calculation(individual, toolbox, X, y, ensemble):
     # check difference 
     delta = np.inf
     for e2 in ensemble:
-        d = difference(GP_predict(e1, X), GP_predict(e2, X))  # this uses the selection of the ensemble, think that is UCARP specific 
+        d = difference(GP_predict(e1, X, np.unique(y)), GP_predict(e2, X, np.unique(y)))  # this uses the selection of the ensemble, think that is UCARP specific 
         if d < delta:
             delta = d
     if delta == 0:
@@ -54,7 +54,7 @@ def bagging_fitness_calculation(individual, toolbox, X, y, ensemble):
     # calculate the temporary ensemble
     ypred = []
     for e in temp_ensemble:
-        ypred.append(GP_predict(e, X)) # might have to do one by one then combine
+        ypred.append(GP_predict(e, X, np.unique(y))) # might have to do one by one then combine
     ypred = np.array(ypred)
     assert(ypred.shape == (len(temp_ensemble),len(X)))
     ypred = binary_voting(ypred)
@@ -146,7 +146,7 @@ def divbagging_member_generation(X, y, params, seed): # this is going to call th
             temp.append([pop[i], df[i], s[i]])
 
         #print(df)
-        sorted_pop = sorted(temp, key=lambda member : accuracy(y, GP_predict(member[0], X)), reverse=True) # DESCENDING 
+        sorted_pop = sorted(temp, key=lambda member : accuracy(y, GP_predict(member[0], X, np.unique(y))), reverse=True) # DESCENDING 
         ensemble.append(sorted_pop[0][0]) # complied lambda
         es.append(sorted_pop[0][2]) # str of member 
     

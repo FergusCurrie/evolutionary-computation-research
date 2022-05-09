@@ -34,8 +34,8 @@ def fitness_calculation(individual, toolbox, X, y):
     func = toolbox.compile(expr=individual)
 
     # Calculate accuracy on class 0
-    class_0_acc = accuracy(y[y==0], GP_predict(func, X[y == 0]))
-    class_1_acc = accuracy(y[y==1], GP_predict(func, X[y == 1]))
+    class_0_acc = accuracy(y[y==0], GP_predict(func, X[y == 0], np.unique(y)))
+    class_1_acc = accuracy(y[y==1], GP_predict(func, X[y == 1], np.unique(y)))
 
     return class_0_acc, class_1_acc,
 

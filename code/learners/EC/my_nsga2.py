@@ -200,7 +200,7 @@ def assignNCLDist(ensemble, individuals, X,y, toolbox):
         mask = y == k 
         g = np.zeros((len(ensemble), len(y[mask]))) # shape of learners x observations  
         for j,e in enumerate(ensemble):
-            g[j, :] = GP_predict(toolbox.compile(expr=e), X[mask]) # can we pass single datpoints? 
+            g[j, :] = GP_predict(toolbox.compile(expr=e), X[mask], np.unique(y)) # can we pass single datpoints? 
         G = (1 / 1 + np.exp(g)) # elementwise.  # only giving euler number 
         E = binary_voting(g) # (len())
         outer = G - E
@@ -251,7 +251,7 @@ def assignPFDist(ensemble, individuals, X,y, toolbox, weighting=0.5):
         g = np.zeros((len(ensemble), len(y[mask]))) # shape of learners x observations  
         er = np.zeros(M,)
         for j,e in enumerate(ensemble):
-            g[j, :] = GP_predict(toolbox.compile(expr=e), X[mask]) # can we pass single datpoints? 
+            g[j, :] = GP_predict(toolbox.compile(expr=e), X[mask], np.unique(y)) # can we pass single datpoints? 
             er[j] = error_rate(g[j, :], y[mask])
         er_outer = np.subtract.outer(er, -er)
 

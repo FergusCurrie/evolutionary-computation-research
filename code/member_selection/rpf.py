@@ -21,11 +21,11 @@ def rpf(ensemble : list, X : np.array, y : np.array, decision_fusion_func : Call
         list: list of model objects in the final ensmble
     """
     # First sort population 
-    sorted_ensemble = sorted(ensemble, key=lambda member : accuracy(y, member.predict(X)), reverse=True) # DESCENDING 
+    sorted_ensemble = sorted(ensemble, key=lambda member : accuracy(y, member.predict(X, np.unique(y))), reverse=True) # DESCENDING 
 
     final_ensemble = []
     for e in sorted_ensemble:
-        ypred = decision_fusion_func(e.predict(X))
+        ypred = decision_fusion_func(e.predict(X, np.unique(y)))
         acc = accuracy(y, ypred)
         if acc > e:
             final_ensemble.append(e)

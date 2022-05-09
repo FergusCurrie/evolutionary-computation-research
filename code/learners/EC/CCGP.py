@@ -44,7 +44,7 @@ def fitness_calculation(pop, toolbox, X, y, w=0.5):
     Fitness function. Compiles GP then tests
     """
     funcs = [toolbox.compile(expr=ind) for ind in pop]
-    ypreds = np.array([GP_predict(func, X) for func in funcs])
+    ypreds = np.array([GP_predict(func, X, np.unique(y)) for func in funcs])
     votes = binary_voting(ypreds)
     x = accuracy(votes, y)
     return x,

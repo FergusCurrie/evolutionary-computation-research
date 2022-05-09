@@ -17,8 +17,15 @@ def binary_voting(ypred : np.array) -> np.array:
     avg[avg < 0.5] = 0
     return avg
 
+def majority_voting(ypred : np.array):
+    result = []
+    for i in range(ypred.shape[1]):
+        unique, counts = np.unique(ypred[:,i], return_counts=True, axis=0)
+        result.append(unique[np.argmax(counts)])
+    return np.array(result)
 
-def weighted_voting(ypred : np.array, weights : np.array) -> np.array:
+
+def weighted_voting(ypred : np.array, weights : np.array, binary=True) -> np.array:
     """
     Take a 2D np array of (n_learners, n_datapoints) and average along learn axis.
     Threshold to 0/1 depending on if value is closer
@@ -31,5 +38,7 @@ def weighted_voting(ypred : np.array, weights : np.array) -> np.array:
         np.array: 1d array of predictions with shape (n_datapoints)
     """
     ypred = ypred * weights
-    return binary_voting(ypred)
+    if binary:
+        return binary_voting(ypred)
+    return majority_voting(ypred)
 

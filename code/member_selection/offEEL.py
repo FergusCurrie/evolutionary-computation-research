@@ -10,7 +10,7 @@ from typing import Callable
 def offEEL(ensemble : list, X : np.array, y : np.array, decision_fusion_func : Callable, params) -> list:
     print('start offeel')
     # First sort population 
-    sorted_ensemble = sorted(ensemble, key=lambda member : accuracy(y, member.predict(X)), reverse=True) # DESCENDING 
+    sorted_ensemble = sorted(ensemble, key=lambda member : accuracy(y, member.predict(X, np.unique(y))), reverse=True) # DESCENDING 
     print(len(sorted_ensemble))
     # Now loop through an 
     best = [-1, -1] # ind, acc
@@ -18,7 +18,7 @@ def offEEL(ensemble : list, X : np.array, y : np.array, decision_fusion_func : C
         print(i)
         F = sorted_ensemble[0:i+1]
         
-        raw_ypred = np.array([learner.predict(X) for learner in F])
+        raw_ypred = np.array([learner.predict(X, np.unique(y)) for learner in F])
 
         # Then calculate true predictions with decision function
         ypred = decision_fusion_func(raw_ypred)

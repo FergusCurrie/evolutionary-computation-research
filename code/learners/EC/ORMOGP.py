@@ -31,7 +31,7 @@ def fitness_calculation(individual, toolbox, X, y, pop, pop_diversity, obj1):
     """
     # First calculate obj1 - accuracy
     func = toolbox.compile(expr=individual)
-    err = obj1(y, GP_predict(func, X))
+    err = obj1(y, GP_predict(func, X, np.unique(y)))
     
     # Then get diversity from dict
     index = -1

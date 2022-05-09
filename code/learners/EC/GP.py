@@ -31,8 +31,8 @@ def fitness_calculation(individual, toolbox, X, y, w=0.5):
     """
     func = toolbox.compile(expr=individual)
     # Calculated the 'ave' function
-    ypred = GP_predict(func, X)
-    x = ave(y, ypred)
+    ypred = GP_predict(func, X, np.unique(y))
+    x = accuracy(y, ypred) # this is 
     return x,
 
 def gp_member_generation(X,y, params, seed):
