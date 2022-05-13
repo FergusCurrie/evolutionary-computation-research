@@ -1,7 +1,7 @@
 
 from sklearn.tree import export_text
 #from code.learners.EC.deap_extra import get_pset
-
+from deap import gp
 
 class SklearnParse:
 
@@ -67,20 +67,30 @@ class SklearnParse:
         return sklearn_tree[1:index], sklearn_tree[index+1:] # This should shave of the already used if 
 
 
+    def calculate_center_from_class(self, class_val, n_classes):
+        radius = 0.5 # size of the map prediction 
+        lowest_threshold = 0.3 * n_classes * -1
+        class_val = float(class_val)
+        return lowest_threshold + (class_val * radius * 2) - radius
 
-    def build_tree(self, sklearn_tree):
+    def build_tree(self, sklearn_tree, n_unique):
         """
         Sklearn tree needs to be a list of string 
         
         Recursive tree building method from sklearn_tree
         """
+        #breakpoint()
         assert(type(sklearn_tree[0] == str))
         assert(type(sklearn_tree == list))
         gptree = []
         # Base case to stop recursion
         if len(sklearn_tree) == 1:
             assert('class' in sklearn_tree[0])
-            return [] # some kind of switch statement here to select correct value for gp. 
+            class_val = sklearn_tree[0][-1]
+            assert(class_val.isdigit())
+            center_class = self.calculate_center_from_class(class_val, n_unique)
+            self.pset.addTerminal(center_class) # create new terminal 
+            return [self.get_deap_terminal(center_class)] # some kind of switch statement here to select correct value for gp. 
         
         # Look at the first line of the tree
         first_chunk = sklearn_tree[0]
@@ -103,25 +113,25 @@ class SklearnParse:
             # Split into 'b' and 'c' components
             first_half, second_half = self.half_on_if(sklearn_tree) # halves the arrays based upon first element if statement
             # Deal with the 'b' component (of gp) fist by using the second half of the sklearn if
-            sec = self.build_tree(second_half)
+            sec = self.build_tree(second_half, n_unique)
             for x in sec:
                 gptree.append(x)
                 
             # Deal with the 'c' component (of gp) by using the first half of the sklearn if
-            fir = self.build_tree(first_half)
+            fir = self.build_tree(first_half, n_unique)
             for x in fir:
                 gptree.append(x)
             
         return gptree
 
-    def sklearn_random_forest_to_deap_gp_pop(self, model): # takes a rando
+    def sklearn_random_forest_to_deap_gp_pop(self, model, n_unique): # takes a rando
         pop = []
         for estimator in model.estimators_:
             text_representation = export_text(estimator)
             tree = [t for t in text_representation.split('\n')]
             p_tree =self.patch_tree_depth(tree) # make sure the trees have consistent height while being distinguishable. \
             p_tree.remove('')
-            pop.append(self.build_tree(p_tree))
-        #print(pop[0])
+            built_tree = self.build_tree(p_tree, n_unique)
+            pop.append(gp.PrimitiveTree(built_tree))
         return pop
             

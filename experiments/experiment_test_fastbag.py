@@ -28,7 +28,7 @@ def get_fast_baggp_experiment():
 
     # MODELS ###############################################################################################################
     # BaggingGP
-    fast_bag_params_1 = {"p_size": 5, "max_depth": 2, "pc": 0.6, "pm": 0.4, "ngen": 2, "verbose": False, "t_size": 7, 'ncycles':1, 'batch_size':100}
+    fast_bag_params_1 = {"p_size": 500, "max_depth": 5, "pc": 0.6, "pm": 0.4, "ngen": 20, "verbose": False, "t_size": 7, 'ncycles':5, 'batch_size':100}
     fast_bag_params= [fast_bag_params_1]
     fast_bag_model = Model(
         member_generation_func=gp_rf_bagging_member_generation,

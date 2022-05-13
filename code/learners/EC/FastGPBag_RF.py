@@ -19,8 +19,6 @@ import itertools
 
 def rf_init_generator(rf_pop, counter):
     value = next(counter)
-    print(f'counter valuye is = {value}')
-    #print(rf_pop[value])
     p = rf_pop[value]
     return p
 
@@ -74,7 +72,7 @@ def bagging_fitness_calculation(individual, toolbox, X, y, ensemble):
 
 
 
-def gp_member_generation(X,y, params, seed):
+def rf_gp_member_generation(X,y, params, seed):
     random.seed(seed)
     # unpack parameters
     max_depth = params["max_depth"]
@@ -101,12 +99,10 @@ def gp_member_generation(X,y, params, seed):
 
     rf_params = {"n_estimators":p_size, "seed":seed, "max_depth":max_depth}
     rf_model = random_forest_classifier_member_generation(X, y, rf_params)
-    for x in rf_model.estimators_:
-        print(x)
 
-    rf_pop = parser.sklearn_random_forest_to_deap_gp_pop(rf_model)
-    for x in rf_pop:
-        print(len(x)) # with max depth 6 these sit at around 60 and at around 12 with max depth 2 
+
+    n_unique = len(np.unique(y))
+    rf_pop = parser.sklearn_random_forest_to_deap_gp_pop(rf_model, n_unique)
     
     toolbox = get_toolbox(pset, t_size, max_depth, X, y, curr_ensemble, rf_pop, counter)
 
@@ -116,15 +112,7 @@ def gp_member_generation(X,y, params, seed):
     pop = toolbox.population(n=p_size)
     #print(type(pop))    # list 
     #print(type(pop[0])) # <class 'deap.creator.Individual'>      ....   This is good! 
-    #print(len(pop))
-    print(pop)
-    print(len(pop))
-    print(len(pop[0]))
-    for x in pop:
-        print([x])
-        print(x)
-        print()
-    return
+
 
 
 
@@ -143,9 +131,6 @@ def gp_member_generation(X,y, params, seed):
     logbook.header = ['gen', 'nevals'] + (mstats.fields if mstats else [])
     df_data = []
 
-
-
-    
 
     for gen in range(1, ngen + 1):
         offspring_a = toolbox.select(pop, len(pop))
@@ -166,7 +151,7 @@ def gp_member_generation(X,y, params, seed):
     # nodes, edges, labels = gp.graph(pop[0])
 
 
-
+    #return [toolbox.compile(ind) for ind in pop], df_data, [str(ind) for ind in pop]
     return [toolbox.compile(ind) for ind in pop], pd.DataFrame(data=df_data), [str(ind) for ind in pop]
 
 
@@ -174,25 +159,31 @@ def gp_member_generation(X,y, params, seed):
 # Bagging 
 #######################################################################################################################
 
+
 def gp_rf_bagging_member_generation(X, y, params, seed): # this is going to call the innergp a few times. 
     ncycles  = params['ncycles']
     batch_size = params['batch_size']
     ensemble = []
     es = [] # strings 
+    dfs = []
     for c in range(ncycles):
+        #print(f'cycle = {c}')
         # evolve the ensemble for this cycle
         idx = np.random.choice(np.arange(len(X)), batch_size, replace=True)
         Xsubset = X[idx]
         ysubset = y[idx]
         params['ensemble'] = ensemble
-        pop, df, s = gp_member_generation(Xsubset, ysubset, params, seed+c)
+        pop, df, s = rf_gp_member_generation(Xsubset, ysubset, params, seed+c)
+        dfs.append(df)
         temp = []
         for i in range(len(pop)):
-            temp.append([pop[i], df[i], s[i]])
+            temp.append([pop[i], s[i]])
 
+        #print(df)
         sorted_pop = sorted(temp, key=lambda member : accuracy(y, GP_predict(member[0], X, np.unique(y))), reverse=True) # DESCENDING 
         ensemble.append(sorted_pop[0][0]) # complied lambda
-        es.append(sorted_pop[0][2]) # str of member 
+        es.append(sorted_pop[0][1]) # str of member 
     
-    return ensemble, df, es
 
+
+    return ensemble, df[0], es # temporarily only saving the first 
