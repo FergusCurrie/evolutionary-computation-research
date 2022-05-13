@@ -25,7 +25,7 @@ def protectedDiv(left, right):
 
 def get_pset(num_args):
     pset = gp.PrimitiveSet("MAIN", num_args)
-    pset.addPrimitive(operator.add, 2)
+    pset.addPrimitive(operator.add, 2) # second number is arity which means how mnay nodes leadi nto it 
     pset.addPrimitive(operator.sub, 2)
     pset.addPrimitive(operator.mul, 2)
     pset.addPrimitive(protectedDiv, 2)

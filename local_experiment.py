@@ -17,16 +17,16 @@ from code.learners.EC.NCLMOGP import nclmo_member_generation
 from code.learners.EC.PFMOGP import pfmo_member_generation
 import random 
 
-import random
-
 
 # MODELS ###############################################################################################################
 
+xpr_name = 'bagboost_experiment'
+X = get_experiment(xpr_name)
+#X = get_experiment('fast_bagboost_experiment')
 
-X = get_experiment('fast_bagboost_experiment')
-
-s = random.randint(0,300)
+s = random.randint(0,9999)
 for i in range(X['n_tasks']):
-    run(s, i+1, 'fast_bagboost_experiment')
+    run(s, i+1, xpr_name)
+
 
 
