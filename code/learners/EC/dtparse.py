@@ -84,6 +84,8 @@ class SklearnParse:
         assert(type(sklearn_tree == list))
         gptree = []
         # Base case to stop recursion
+        print(len(sklearn_tree))
+        print(sklearn_tree)
         if len(sklearn_tree) == 1:
             assert('class' in sklearn_tree[0])
             class_val = sklearn_tree[0][-1]
@@ -95,6 +97,7 @@ class SklearnParse:
         # Look at the first line of the tree
         first_chunk = sklearn_tree[0]
         first_chunk_split = first_chunk.split()
+        print(first_chunk)
         feature = [x for x in first_chunk_split if 'feature' in x][0] # not possible if we 
 
         feature_primitive = self.get_deap_arg(int(feature.replace('feature_', '')))
