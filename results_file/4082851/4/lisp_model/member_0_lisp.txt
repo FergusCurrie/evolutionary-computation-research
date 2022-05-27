@@ -1,0 +1,1 @@
+my_if(4.85, sub(ARG3, 1.6), my_if(-1.4, mul(protectedDiv(my_if(-1.4, -1.4, -1.4), 5.05), add(my_if(-1.4, 5.75, -1.4), mul(5.0, 1.6))), ARG2))
