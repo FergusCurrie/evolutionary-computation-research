@@ -56,13 +56,15 @@ class SklearnParse:
         first_chunk = sklearn_tree[0]
         found_feature = False
         indent, feature, equality, mod = first_chunk.split()
-        
         # Find index of second half of if 
         index = -1 
         for i,line in enumerate(sklearn_tree):
-            if (feature in line) and (mod in line) and (indent in line) and (equality not in line):
+            if 'class' in line:
+                continue
+            indent2, feature2, equality2, mod2 = line.split()
+            if (indent == indent2) and (feature == feature2) and (equality2 != equality) and (mod == mod2) and (index != 0):
                 index = i
-        
+                break
         # Return
         return sklearn_tree[1:index], sklearn_tree[index+1:] # This should shave of the already used if 
 
@@ -73,9 +75,9 @@ class SklearnParse:
         class_val = float(class_val)
         return lowest_threshold + (class_val * radius * 2) - radius
 
-    def build_tree(self, sklearn_tree, n_unique):
+    def build_tree(self, sklearn_tree, n_unique, original_tree):
         """
-        Sklearn tree needs to be a list of string 
+        sklearn_tree is a list of string 
         
         Recursive tree building method from sklearn_tree
         """
@@ -84,8 +86,6 @@ class SklearnParse:
         assert(type(sklearn_tree == list))
         gptree = []
         # Base case to stop recursion
-        print(len(sklearn_tree))
-        print(sklearn_tree)
         if len(sklearn_tree) == 1:
             assert('class' in sklearn_tree[0])
             class_val = sklearn_tree[0][-1]
@@ -97,7 +97,7 @@ class SklearnParse:
         # Look at the first line of the tree
         first_chunk = sklearn_tree[0]
         first_chunk_split = first_chunk.split()
-        print(first_chunk)
+        
         feature = [x for x in first_chunk_split if 'feature' in x][0] # not possible if we 
 
         feature_primitive = self.get_deap_arg(int(feature.replace('feature_', '')))
@@ -116,12 +116,12 @@ class SklearnParse:
             # Split into 'b' and 'c' components
             first_half, second_half = self.half_on_if(sklearn_tree) # halves the arrays based upon first element if statement
             # Deal with the 'b' component (of gp) fist by using the second half of the sklearn if
-            sec = self.build_tree(second_half, n_unique)
+            sec = self.build_tree(second_half, n_unique, original_tree)
             for x in sec:
                 gptree.append(x)
                 
             # Deal with the 'c' component (of gp) by using the first half of the sklearn if
-            fir = self.build_tree(first_half, n_unique)
+            fir = self.build_tree(first_half, n_unique, original_tree)
             for x in fir:
                 gptree.append(x)
             
@@ -134,7 +134,7 @@ class SklearnParse:
             tree = [t for t in text_representation.split('\n')]
             p_tree =self.patch_tree_depth(tree) # make sure the trees have consistent height while being distinguishable. \
             p_tree.remove('')
-            built_tree = self.build_tree(p_tree, n_unique)
+            built_tree = self.build_tree(p_tree, n_unique, p_tree)
             pop.append(gp.PrimitiveTree(built_tree))
         return pop
             

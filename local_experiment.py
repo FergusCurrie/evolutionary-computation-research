@@ -10,7 +10,6 @@ from experiments.get_experiment import get_experiment
 from code.learners.EC.ORMOGP import test
 from code.learners.EC.DivBaggingGP import divbagging_member_generation
 from code.learners.EC.DivNicheGP import divnichegp_member_generation
-from code.learners.EC.DivNicheBoostGP import divnicheboostgp_member_generation
 from code.learners.EC.CCGP import ccgp_member_generation
 
 from code.learners.EC.NCLMOGP import nclmo_member_generation
@@ -20,8 +19,8 @@ import random
 
 # MODELS ###############################################################################################################
 
-xpr_name = 'fast_bagboost_experiment'
-#xpr_name = 'test_fastbag'
+#xpr_name = 'fast_bagboost_experiment'
+xpr_name = 'fastbag'
 X = get_experiment(xpr_name)
 #X = get_experiment('fast_bagboost_experiment')
 
