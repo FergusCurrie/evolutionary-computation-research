@@ -107,7 +107,7 @@ class MahalanobisDistanceClassifier:
 
 
 
-	def predict(self, X):		
+	def predict(self, X):	
 		predictions = []
 		X = [ list(sample) for sample in X.iloc ]
 

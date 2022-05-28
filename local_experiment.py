@@ -20,7 +20,7 @@ import random
 # MODELS ###############################################################################################################
 
 #xpr_name = 'fast_bagboost_experiment'
-xpr_name = 'divmogp_experiment'
+xpr_name = 'm3gp_bag'
 X = get_experiment(xpr_name)
 #X = get_experiment('fast_bagboost_experiment')
 
