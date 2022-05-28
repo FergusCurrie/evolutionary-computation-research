@@ -11,7 +11,7 @@ import pandas as pd
 import random
 import time 
 
-def fitness_calculation(individual, toolbox, X, y, pop, pop_diversity, obj1):
+def fitness_calculation(individual, toolbox, X, y, pop, pop_diversity):
     """
     Minimisation fitness calculation 
 
@@ -31,7 +31,7 @@ def fitness_calculation(individual, toolbox, X, y, pop, pop_diversity, obj1):
     """
     # First calculate obj1 - accuracy
     func = toolbox.compile(expr=individual)
-    err = obj1(y, GP_predict(func, X, np.unique(y)))
+    err = accuracy(y, GP_predict(func, X, np.unique(y)))
     
     # Then get diversity from dict
     index = -1
@@ -74,7 +74,7 @@ def calculate_diversity_dict(individuals, toolbox, X, y) -> dict:
     for j in range(M):
         ind = individuals[j]
         f = toolbox.compile(expr=ind)
-        func = lambda x : single_predict(f, x)
+        func = lambda x : single_predict(f, x, np.unique(y))
         P[j] = np.apply_along_axis(func, axis=1, arr=In[j,:,:]) # apply to a 1d slice - 1d slice being the features 
     assert(P.shape == (M,N))
 
@@ -144,7 +144,6 @@ def gp_ormo_member_generation(X, y, params, seed):
     ngen = params["ngen"]
     verbose = params["verbose"]
     p_size = params["p_size"]
-    obj1 = params['obj1'] # what function to use for obj1
 
     # Initalise primitives
     pset = get_pset(num_args=X.shape[1])
@@ -163,7 +162,7 @@ def gp_ormo_member_generation(X, y, params, seed):
     pop = toolbox.population(n=p_size) # initialise the population to pass as final argument to fitnesss
     pop_diversity = calculate_diversity_dict(pop, toolbox, X, y)
     #return pop_diversity, [toolbox.compile(expr=ind) for ind in pop]
-    toolbox.register("evaluate", fitness_calculation, toolbox=toolbox, X=X, y=y, pop=pop, pop_diversity=pop_diversity, obj1=obj1)  # HERE?
+    toolbox.register("evaluate", fitness_calculation, toolbox=toolbox, X=X, y=y, pop=pop, pop_diversity=pop_diversity)  # HERE?
     toolbox.register("select", tools.selNSGA2)
     toolbox.register("mate", gp.cxOnePoint)
     toolbox.register("expr_mut", gp.genHalfAndHalf, min_=0, max_=max_depth)

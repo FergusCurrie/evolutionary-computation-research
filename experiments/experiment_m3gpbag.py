@@ -12,14 +12,14 @@ from code.data_processing import get_all_datasets, get_data
 from code.learners.EC.DivBaggingGP import divbagging_member_generation
 from code.learners.EC.DivNicheGP import divnichegp_member_generation
 
-from code.decision_fusion.voting import binary_voting
+from code.decision_fusion.voting import binary_voting, majority_voting
 from code.learners.EC.deap_extra import GP_predict
 from code.metrics.classification_metrics import binary_metric, multi_class_metric
 from code.member_selection.offEEL import offEEL
 
-def get_experiment_bagboost_experiment():
+def get_m3gpbag_experiment():
     # nam
-    exp_name = "bagboost_experiment"
+    exp_name = "m3gpbag"
     # print(datasets.keys())
     all_datasets = get_all_datasets()
     datasets = {}
@@ -30,25 +30,24 @@ def get_experiment_bagboost_experiment():
     metrics = [multi_class_metric]
 
     # MODELS ###############################################################################################################
-
+    
     # BaggingGP
-    bag_params = []
     #bag_params_1 = {"p_size": 500, "max_depth": 5, "pc": 0.6, "pm": 0.4, "ngen": 20, "verbose": False, "t_size": 7, 'ncycles':5, 'batch_size':100}
-    for i in range(50,500,50):
-        bag_model.append({"p_size": 500, "max_depth": 5, "pc": 0.6, "pm": 0.4, "ngen": 20, "verbose": False, "t_size": 7, 'ncycles':5, 'batch_size':i})
+    bag_params_1 = {"p_size": 500, "max_depth": 5, "pc": 0.6, "pm": 0.4, "ngen": 20, "verbose": False, "t_size": 7, 'ncycles':5, 'batch_size':100}
+    bag_params = [bag_params_1]
     bag_model = Model(
         member_generation_func=divbagging_member_generation,
         member_selection_func=None, # offEEl
-        decision_fusion_func=binary_voting,
+        decision_fusion_func=majority_voting,
         params=bag_params,
         pred_func=GP_predict,
-        model_name = 'baggp'
+        model_name = 'm3gpbag'
     )
+
 
 
     # Combine models into list
     models = [bag_model]
-    #models = [ccgp_model]
 
     ########################################################################################################################
 

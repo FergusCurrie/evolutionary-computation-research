@@ -2,6 +2,7 @@
 Experiment testing baselines. 
 """
 import sys
+from code.learners.EC.ORMOGP import gp_ormo_member_generation
 sys.path.append("/")
 
 from model import Model
@@ -22,11 +23,9 @@ def get_experiment__mogpdiv_experiment():
     exp_name = "divmogp_experiment"
 
     # Datasets
-    datasets = {'ionosphere':get_data("ionosphere"), 
-                'mammo_graphic' : get_data("mammo_graphic"), 
-                'cleveland' : get_data('cleveland'), 
-                'wisconsin' : get_data('wisconsin_breast_cancer')}
-
+    datasets = {}
+    for ds in ['cleveland', 'ionosphere', 'mammo_graphic', 'wisconsin_breast_cancer', 'australia', 'postop', 'spec']:
+        datasets[ds] = get_data(ds)
 
     # Metrics
     metrics = [binary_metric]
@@ -81,9 +80,23 @@ def get_experiment__mogpdiv_experiment():
         model_name = 'PFMOGP'
     )
 
+    # ORMOGP
+    ORMOGP_params_1 = {"p_size": 500, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 50, "verbose": False}
+    ORMOGP_params = [ORMOGP_params_1]
+    ORMOGP_model = Model(
+        member_generation_func=gp_ormo_member_generation,
+        member_selection_func=offEEL, # offEEL
+        decision_fusion_func=binary_voting,
+        params=ORMOGP_params,
+        pred_func=GP_predict,
+        model_name = 'ORMOGP'
+    )
+
+
+
 
     # Combine models into list
-    models = [GP_model, MOGP_model, NCLMOGP_model, PFMOGP_model]
+    models = [ORMOGP_model,GP_model, MOGP_model, NCLMOGP_model, PFMOGP_model]
     ########################################################################################################################
 
     # Calculat number of tasks
