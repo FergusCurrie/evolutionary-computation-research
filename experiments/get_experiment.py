@@ -24,6 +24,7 @@ def get_experiment(name : str) -> dict:
     Args:
         name (str): Name of the experiment to get
     """
+    name = name.strip()
     assert(is_experiment(name)) # confirm name is valid
 
     # Return correct function 
