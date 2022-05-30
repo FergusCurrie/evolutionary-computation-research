@@ -2,3 +2,4 @@ models/
 .vscode
 .ipynb_checkpoints
 __pycache__
+prepared_results/

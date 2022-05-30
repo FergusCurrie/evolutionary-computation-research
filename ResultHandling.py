@@ -11,7 +11,7 @@ from scipy.stats import ranksums
 from scipy.stats import wilcoxon
 
 class ResultHandling:
-    def __init__(self, job,height, width, box_label_size=5) -> None:
+    def __init__(self, job, height, width, box_label_size=15) -> None:
         self.job = job
         self.model_names = ['gp','bag', 'nich', 'ccgp']
         self.datasets = get_all_datasets()
@@ -84,7 +84,8 @@ class ResultHandling:
         fig, ax = plt.subplots(figsize=(self.width, self.height))
         ax.boxplot(boxes)
         ax.set_xlim(0.5, len(boxes) + 0.5)
-        ax.set_xticklabels(labels,rotation=45, fontsize=15)
+        ax.set_xticklabels(labels,rotation=45, fontsize=self.box_label_size)
+        plt.yticks(fontsize=self.box_label_size)
         if save:
             if figname != '':
                 plt.savefig(f'prepared_results/{figname}.png')
@@ -92,6 +93,19 @@ class ResultHandling:
             plt.show()
         else:
             plt.close()
+
+    def get_model_vs_dataset_dataframe(self, training) -> pd.DataFrame:
+        assert(type(training)==bool)
+        avgs = []
+        for ds in self.datasets:
+            temp = []
+            for mn in self.model_names:
+                X = self.get_cond_data(mgen=False, train=training, dataset_name=ds, model_name=mn)
+                temp.append(float(np.mean(X)))
+            avgs.append(temp)
+        df = pd.DataFrame(data=avgs, columns=self.model_names)
+        df.index = self.datasets
+        return df
 
     def wilcoxon_test(self):
         tests = []
