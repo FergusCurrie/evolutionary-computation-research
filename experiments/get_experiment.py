@@ -14,7 +14,7 @@ from experiments.experiment_m3gpbag import get_m3gpbag_experiment
 def is_experiment(name : str) -> bool:
     if name in ['bagboost_experiment', 'divmogp_experiment', 'fastbag','m3gp_bag']:
         return True
-    print(f'\n\n {name} \nn\n')
+    print(f'\n\n={name}=\n\n')
     return False
 
 def get_experiment(name : str) -> dict:

@@ -35,7 +35,7 @@ def m3gp_predict(learner, X, n_classes):
 
 def get_m3gpbag_experiment():
     # nam
-    exp_name = "m3gpbag"
+    exp_name = "m3gp_bag"
     # print(datasets.keys())
     all_datasets = get_all_datasets()
     datasets = {}
@@ -56,7 +56,7 @@ def get_m3gpbag_experiment():
         decision_fusion_func=majority_voting,
         params=m3gpbag_params,
         pred_func=m3gp_predict,
-        model_name = 'm3gpbag'
+        model_name = 'm3gp_bag'
     )
 
 
