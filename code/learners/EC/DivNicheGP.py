@@ -133,7 +133,7 @@ def divnichegp_member_generation(X,y, params, seed):
             halloffame.update(offspring_a)
         
         # Apply clearning method 
-        clearing_method(offspring_a, toolbox, Xsubset, ysubset, radius=radius, capacity=capacity)
+        clearing_method(offspring_a, toolbox, Xsubset, ysubset, radius=radius, capacity=capacity) # sets -inf to members to drop
         
         pop[:] = offspring_a
         record = mstats.compile(pop) if mstats else {}

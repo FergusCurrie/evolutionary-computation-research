@@ -10,3 +10,8 @@ bagboost = GP/BagGP/NicheGP/CCGP run across all datasets. (with appropriate gp p
 4082937 = m3gp 
 
 4082885 = MOGP run, final method failed (PFMOGP). Needs a partial re run. 
+
+
+Running: 
+
+4083474 = nw bagboost

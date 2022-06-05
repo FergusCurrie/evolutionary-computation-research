@@ -26,12 +26,11 @@ def get_fast_baggp_experiment():
     # Metrics
     metrics = [multi_class_metric]
 
-    # MODELS ###############################################################################################################
-    # BaggingGP
-    fast_bag_params_1 = {"p_size": 500, "max_depth": 5, "pc": 0.6, "pm": 0.4, "ngen": 20, "verbose": False, "t_size": 7, 'ncycles':5, 'batch_size':100}
-    #fast_bag_params_1 = {"p_size": 5, "max_depth": 5, "pc": 0.6, "pm": 0.4, "ngen": 2, "verbose": False, "t_size": 7, 'ncycles':5, 'batch_size':100}
+    # Fast bag gp with lin alg norm
+    fast_bag_params_1 = {"p_size": 500, "max_depth": 5, "pc": 0.6, "pm": 0.4, "ngen": 20, "verbose": False, "t_size": 7, 'ncycles':5, 'batch_size':100, 'use_hamming':False}
+    #fast_bag_params_1 = {"p_size": 5, "max_depth": 5, "pc": 0.6, "pm": 0.4, "ngen": 2, "verbose": False, "t_size": 7, 'ncycles':5, 'batch_size':100, 'use_hamming':False}
     fast_bag_params= [fast_bag_params_1]
-    fast_bag_model = Model(
+    fast_bag_model1 = Model(
         member_generation_func=gp_rf_bagging_member_generation,
         member_selection_func=None, # offEEl
         decision_fusion_func=majority_voting,
@@ -40,7 +39,20 @@ def get_fast_baggp_experiment():
         model_name = 'fastbaggp'
     )
 
-    models = [fast_bag_model]
+    # Fast bag gp with hamming distance
+    fast_bag_params_1 = {"p_size": 500, "max_depth": 5, "pc": 0.6, "pm": 0.4, "ngen": 20, "verbose": False, "t_size": 7, 'ncycles':5, 'batch_size':100, 'use_hamming':True}
+    #fast_bag_params_1 = {"p_size": 5, "max_depth": 5, "pc": 0.6, "pm": 0.4, "ngen": 2, "verbose": False, "t_size": 7, 'ncycles':5, 'batch_size':100, 'use_hamming':True}
+    fast_bag_params= [fast_bag_params_1]
+    fast_bag_model2 = Model(
+        member_generation_func=gp_rf_bagging_member_generation,
+        member_selection_func=None, # offEEl
+        decision_fusion_func=majority_voting,
+        params=fast_bag_params,
+        pred_func=GP_predict,
+        model_name = 'ham_fastbaggp'
+    )
+
+    models = [fast_bag_model1, fast_bag_model2]
     ########################################################################################################################
 
     # Calculat number of tasks
