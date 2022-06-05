@@ -8,7 +8,7 @@ import random
 from code.metrics.classification_metrics import *
 from code.learners.EC.deap_extra import GP_predict, get_pset
 import pandas as pd 
-
+from code.decision_fusion.voting import majority_voting
 
 def get_toolbox(pset, t_size, max_depth, X, y):
     toolbox = base.Toolbox()
@@ -32,8 +32,8 @@ def fitness_calculation(individual, toolbox, X, y, w=0.5):
     func = toolbox.compile(expr=individual)
     # Calculated the 'ave' function
     ypred = GP_predict(func, X, np.unique(y))
-    x = accuracy(y, ypred) # this is 
-    return x,
+    acc = accuracy(y, ypred) # this is 
+    return acc,
 
 def gp_member_generation(X,y, params, seed):
     random.seed(seed)
@@ -71,10 +71,7 @@ def gp_member_generation(X,y, params, seed):
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
     stats_size = tools.Statistics(len)
     mstats = tools.MultiStatistics(fitness=stats_fit, size=stats_size)
-    mstats.register("avg", np.mean)
-    mstats.register("std", np.std)
     mstats.register("min", np.min)
-    mstats.register("max", np.max)
     logbook = tools.Logbook()
     logbook.header = ['gen', 'nevals'] + (mstats.fields if mstats else [])
 

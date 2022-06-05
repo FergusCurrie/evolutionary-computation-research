@@ -21,7 +21,7 @@ import random
 from code.metrics.classification_metrics import *
 from code.learners.EC.deap_extra import GP_predict, get_pset
 import pandas as pd 
-from code.decision_fusion.voting import binary_voting
+from code.decision_fusion.voting import majority_voting
 
     
 
@@ -52,6 +52,7 @@ def fitness_calculation(individual, toolbox, X, y):
     """
     func = toolbox.compile(expr=individual)
     ypred = GP_predict(func, X, np.unique(y)) # ave here? 
+    #ypred = majority_voting(ypred)
     x = accuracy(y, ypred)
     return x,
 
@@ -59,16 +60,16 @@ def fitness_calculation(individual, toolbox, X, y):
 def clearing_method(pop, toolbox, X, y, radius, capacity):
     sorted_ensemble = sorted(pop, key=lambda member : accuracy(y, GP_predict(toolbox.compile(expr=member), X, np.unique(y))), reverse=True) # DESCENDING 
     for i in range(len(sorted_ensemble)):
-        if sorted_ensemble[i].fitness.values[0] < np.inf:
+        if sorted_ensemble[i].fitness.values[0] > -np.inf:
             n = 0
             for j in range(i+1, len(pop), 1): # is this loop right? 
                 ce1 = toolbox.compile(expr=sorted_ensemble[i])
                 ce2 = toolbox.compile(expr=sorted_ensemble[j])
-                if (sorted_ensemble[j].fitness.values[0] < np.inf) and (difference(GP_predict(ce1, X, np.unique(y)), GP_predict(ce2, X, np.unique(y))) < radius):
+                if (sorted_ensemble[j].fitness.values[0] > -np.inf) and (difference(GP_predict(ce1, X, np.unique(y)), GP_predict(ce2, X, np.unique(y))) < radius):
                     if n < capacity:
                         n = n + 1
                     else:
-                        sorted_ensemble[j].fitness.values = (np.inf,)
+                        sorted_ensemble[j].fitness.values = (-np.inf,)
 
 
 
@@ -107,10 +108,7 @@ def divnichegp_member_generation(X,y, params, seed):
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
     stats_size = tools.Statistics(len)
     mstats = tools.MultiStatistics(fitness=stats_fit, size=stats_size)
-    mstats.register("avg", np.mean)
-    mstats.register("std", np.std)
     mstats.register("min", np.min)
-    mstats.register("max", np.max)
     logbook = tools.Logbook()
     logbook.header = ['gen', 'nevals'] + (mstats.fields if mstats else [])
     df_data=[]

@@ -20,13 +20,13 @@ import random
 # MODELS ###############################################################################################################
 
 #xpr_name = 'fast_bagboost_experiment'
-xpr_name = 'm3gp_bag'
+xpr_name = 'bagboost_experiment'
 X = get_experiment(xpr_name)
 #X = get_experiment('fast_bagboost_experiment')
 
 s = random.randint(0,9999)
 for i in range(X['n_tasks']):
-    run(s, i+1, xpr_name)
+    run(s, i+1, xpr_name, nseeds = 5)
 
 
 

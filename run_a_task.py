@@ -119,6 +119,9 @@ def run(jobid : int, taskid : int, name : str, nseeds = 30):
             f = open(f'{d}/lisp_model/member_{ff}_lisp.txt', "a")
             f.write(tree)
             f.close()
+        
+    # Save the model history
+    model.history.to_csv(f'{d}/HISTORY_{name}_job_{jobid}_task_{taskid}_{dataset_name}.csv', index=False)
 
 
 

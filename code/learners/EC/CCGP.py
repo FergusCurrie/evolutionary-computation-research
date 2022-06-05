@@ -5,19 +5,16 @@ from deap.algorithms import varAnd
 import numpy as np
 import operator
 import random
-from code.decision_fusion.voting import binary_voting
 from code.metrics.classification_metrics import *
 from code.learners.EC.deap_extra import GP_predict, get_pset
 import pandas as pd 
+from code.decision_fusion.voting import majority_voting
 
 def get_stats():
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
     stats_size = tools.Statistics(len)
     mstats = tools.MultiStatistics(fitness=stats_fit, size=stats_size)
-    mstats.register("avg", np.mean)
-    mstats.register("std", np.std)
     mstats.register("min", np.min)
-    mstats.register("max", np.max)
     logbook = tools.Logbook()
     logbook.header = ['gen', 'nevals'] + (mstats.fields if mstats else [])
     return mstats, logbook
@@ -45,7 +42,7 @@ def fitness_calculation(pop, toolbox, X, y, w=0.5):
     """
     funcs = [toolbox.compile(expr=ind) for ind in pop]
     ypreds = np.array([GP_predict(func, X, np.unique(y)) for func in funcs])
-    votes = binary_voting(ypreds)
+    votes = majority_voting(ypreds)
     x = accuracy(votes, y)
     return x,
 

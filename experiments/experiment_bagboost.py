@@ -31,7 +31,7 @@ def get_experiment_bagboost_experiment():
 
     # MODELS ###############################################################################################################
     # GP
-    GP_params_1 = {"p_size": 500, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 50, "verbose": False, "t_size": 7}
+    GP_params_1 = {"p_size": 500, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 100, "verbose": False, "t_size": 7}
 
     GP_params = [GP_params_1]
     GP_model = Model(
@@ -89,7 +89,7 @@ def get_experiment_bagboost_experiment():
         "verbose": False, 
         "t_size": 7,
         "nspecies": 5,
-        'species_size': 100,
+        'species_size': 500,
     }
     ccgp_model = Model(
         member_generation_func=ccgp_member_generation,
@@ -103,7 +103,7 @@ def get_experiment_bagboost_experiment():
 
     # Combine models into list
     models = [GP_model, bag_model, nich_model, ccgp_model]
-    #models = [ccgp_model]
+    #models = [bag_model]
 
     ########################################################################################################################
 

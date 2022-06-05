@@ -4,21 +4,28 @@ Code for handling results data.
 import pandas as pd 
 import numpy as np
 import os 
-import sys 
+import sys
+from regex import F
+
+from sklearn import datasets 
 from code.data_processing import get_all_datasets
 import matplotlib.pyplot as plt
 from scipy.stats import ranksums
 from scipy.stats import wilcoxon
 
+from experiments.get_experiment import get_experiment
+
 class ResultHandling:
-    def __init__(self, job, height, width, box_label_size=15) -> None:
+    def __init__(self, job, xp_name, height=10, width=10, box_label_size=15) -> None:
         self.job = job
-        self.model_names = ['gp','bag', 'nich', 'ccgp']
-        self.datasets = get_all_datasets()
         self.box_label_size = box_label_size
-        
         self.width = width
         self.height = height
+
+        # Get experiment data 
+        exp = get_experiment(xp_name)
+        self.datasets = list(exp["datasets"].keys())
+        self.model_names = [m.model_name for m in exp["models"]]
 
         # Initalisisatoin pipeline
         self.make_taskid_to_string() # dictionary for task_id -> 'model_dataset' as a string
@@ -47,10 +54,9 @@ class ResultHandling:
         '''
         if mn == 'all':
             return list(self.data.keys())
-        i = self.model_names.index(mn)
-        sorted_keys =sorted(self.data.keys())
-        model_chunks = [sorted_keys[0:10], sorted_keys[10:20], sorted_keys[20:30], sorted_keys[30:40]]
-        return model_chunks[i]
+        f = self.model_names.index(mn)
+        taskids = [f + (i*len(self.model_names)) for i in range(len(self.datasets))]
+        return taskids
 
     
     def get_task_ids_of_dataset(self, dn : str) -> list:
@@ -59,9 +65,9 @@ class ResultHandling:
         '''
         if dn == 'all':
             return list(self.data.keys())
-        i = self.datasets.index(dn)
-        dataset_keys = [i, i+10, i+20, i+30]
-        return dataset_keys
+        f = self.datasets.index(dn)
+        taskids = [f + (i*len(self.datasets)) for i in range(len(self.model_names))]
+        return taskids
 
     # method to efficently grab correct subsections from 
     def get_data(self, task, member_generation=False, training=False, numpy=False):

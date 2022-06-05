@@ -1,6 +1,5 @@
 
 from code.data_processing import get_data
-from code.learners.EC.GP import gp_member_generation
 from code.metrics.classification_metrics import *
 from deap import gp
 from deap import creator, base, tools
@@ -11,7 +10,7 @@ import random
 from code.metrics.classification_metrics import *
 from code.learners.EC.deap_extra import GP_predict, get_pset
 import pandas as pd 
-from code.decision_fusion.voting import binary_voting
+from code.decision_fusion.voting import majority_voting
 
 
     
@@ -43,24 +42,24 @@ def bagging_fitness_calculation(individual, toolbox, X, y, ensemble):
     e1 = toolbox.compile(expr=individual)
     temp_ensemble = ensemble + [e1] 
     # check difference 
-    delta = np.inf
+    delta = -np.inf
     for e2 in ensemble:
         d = difference(GP_predict(e1, X, np.unique(y)), GP_predict(e2, X, np.unique(y)))  # this uses the selection of the ensemble, think that is UCARP specific 
         if d < delta:
             delta = d
     if delta == 0:
-        return np.inf, 
+        return -np.inf, 
 
     # calculate the temporary ensemble
     ypred = []
     for e in temp_ensemble:
         ypred.append(GP_predict(e, X, np.unique(y))) # might have to do one by one then combine
     ypred = np.array(ypred)
-    assert(ypred.shape == (len(temp_ensemble),len(X)))
-    ypred = binary_voting(ypred)
+    ypred = majority_voting(ypred) # ypred should just be the length of the dataset
+    #assert(ypred.shape == len(X))
     return accuracy(y, ypred), # here
 
-def gp_member_generation(X,y, params, seed):
+def bagging_gp_member_generation(X,y, params, seed):
     random.seed(seed)
     # unpack parameters
     max_depth = params["max_depth"]
@@ -91,9 +90,6 @@ def gp_member_generation(X,y, params, seed):
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
     stats_size = tools.Statistics(len)
     mstats = tools.MultiStatistics(fitness=stats_fit, size=stats_size)
-    mstats.register("avg", np.mean)
-    mstats.register("std", np.std)
-    mstats.register("min", np.min)
     mstats.register("max", np.max)
 
     logbook = tools.Logbook()
@@ -115,13 +111,12 @@ def gp_member_generation(X,y, params, seed):
         # Logging 
         record = mstats.compile(pop) 
         df_data.append(list(record['fitness'].values()) + list(record['size'].values()))
-    
 
     # nodes, edges, labels = gp.graph(pop[0])
 
 
-
-    return [toolbox.compile(ind) for ind in pop], pd.DataFrame(data=df_data), [str(ind) for ind in pop]
+    return toolbox.compile(halloffame[0]), np.array(df_data), str(halloffame[0])
+    #return [toolbox.compile(ind) for ind in pop], np.array(df_data), [str(ind) for ind in pop]
 
 
 #######################################################################################################################
@@ -132,27 +127,22 @@ def divbagging_member_generation(X, y, params, seed): # this is going to call th
     ncycles  = params['ncycles']
     batch_size = params['batch_size']
     ensemble = []
-    es = [] # strings 
-    dfs = []
+    ensemble_strings = []
+
+    sum_history = np.ones((params['ngen'], 2))
     for c in range(ncycles):
-        #print(f'cycle = {c}')
         # evolve the ensemble for this cycle
         idx = np.random.choice(np.arange(len(X)), batch_size, replace=True)
         Xsubset = X[idx]
         ysubset = y[idx]
         params['ensemble'] = ensemble
-        pop, df, s = gp_member_generation(Xsubset, ysubset, params, seed+c)
-        dfs.append(df)
-        temp = []
-        for i in range(len(pop)):
-            temp.append([pop[i], s[i]])
+        compiled_best, min_history, str_best = bagging_gp_member_generation(Xsubset, ysubset, params, seed+c)
+        sum_history += min_history
 
-        #print(df)
-        sorted_pop = sorted(temp, key=lambda member : accuracy(y, GP_predict(member[0], X, np.unique(y))), reverse=True) # DESCENDING 
-        ensemble.append(sorted_pop[0][0]) # complied lambda
-        es.append(sorted_pop[0][1]) # str of member 
+        ensemble.append(compiled_best) # complied lambda
+        ensemble_strings.append(str_best) # str of member 
     
 
 
-    return ensemble, df[0], es # temporarily only saving the first 
+    return ensemble, pd.DataFrame(data=(sum_history/ncycles)), ensemble_strings # temporarily only saving the first 
 
