@@ -1,1 +1,0 @@
-24 : nichgp , iris , {'p_size': 500, 'max_depth': 5, 'pc': 0.6, 'pm': 0.4, 'ngen': 100, 'verbose': False, 't_size': 7, 'batch_size': 100, 'radius': 0.5, 'capacity': 1} 
