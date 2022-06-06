@@ -1,0 +1,1 @@
+9 : GP , yeast , {'p_size': 500, 'max_depth': 8, 'pc': 0.6, 'pm': 0.4, 'ngen': 100, 'verbose': False, 't_size': 7} 
