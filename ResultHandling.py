@@ -16,20 +16,33 @@ from scipy.stats import wilcoxon
 from experiments.get_experiment import get_experiment
 
 class ResultHandling:
-    def __init__(self, job, xp_name, height=10, width=10, box_label_size=15) -> None:
+    def __init__(self, job, xp_name, height=10, width=10, box_label_size=15, target_dir='results_file') -> None:
         self.job = job
+        self.jobid = self.get_jobname_to_id()
         self.box_label_size = box_label_size
         self.width = width
         self.height = height
+        self.target_dir = target_dir
 
         # Get experiment data 
         exp = get_experiment(xp_name)
         self.datasets = list(exp["datasets"].keys())
         self.model_names = [m.model_name for m in exp["models"]]
 
+
         # Initalisisatoin pipeline
         self.make_taskid_to_string() # dictionary for task_id -> 'model_dataset' as a string
         self.load_data() # load data into a dictionary mapping task id -> dataframe of resluts
+
+    def get_jobname_to_id(self):
+        dict = {
+            'bagboost' : '4082125',
+            'fastbag_ham' : '4083560',
+            'ORMOGP' : '4082885'
+        }
+        if self.job in dict.keys():
+            return dict[self.job]
+        return self.job
  
     def make_taskid_to_string(self):
         """Generates a dictionry of taskid -> str('model_dataset')
@@ -41,11 +54,14 @@ class ResultHandling:
     
     def load_data(self) -> None:
         self.data = {}
-        for task in os.listdir(f'results_file/{self.job}/'):
-            if len(os.listdir(f'results_file/{self.job}/{task}')) <= 1:
+        for task in os.listdir(f'{self.target_dir}/{self.job}/'):
+            if len(os.listdir(f'{self.target_dir}/{self.job}/{task}')) <= 1:
                 continue 
-            fn = [x for x in os.listdir(f'results_file/{self.job}/{task}/') if '.csv' in x][0] # currently these files only have one entry
-            self.data[int(task)] = pd.read_csv(f'results_file/{self.job}/{task}/{fn}', index_col=False)
+            fn = [x for x in os.listdir(f'{self.target_dir}/{self.job}/{task}/') if '.csv' in x and 'HISTORY' not in x][0] # currently these files only have one entry
+            self.data[int(task)] = pd.read_csv(f'{self.target_dir}/{self.job}/{task}/{fn}', index_col=False)
+            if self.data[int(task)].isnull().values.any():
+                print('WARNING CONTAINS NAN')
+
 
     def get_taskid_by_model(self, mn) -> list:
         '''
@@ -55,7 +71,9 @@ class ResultHandling:
         if mn == 'all':
             return list(self.data.keys())
         f = self.model_names.index(mn)
-        taskids = [f + (i*len(self.model_names)) for i in range(len(self.datasets))]
+        #taskids = [f + (i*len(self.model_names)) for i in range(len(self.datasets))]
+        starting_index = len(self.datasets) * f
+        taskids = [starting_index + i + 1 for i in range(len(self.datasets))]
         return taskids
 
     
@@ -66,7 +84,7 @@ class ResultHandling:
         if dn == 'all':
             return list(self.data.keys())
         f = self.datasets.index(dn)
-        taskids = [f + (i*len(self.datasets)) for i in range(len(self.model_names))]
+        taskids = [f + (i*len(self.datasets)) +1 for i in range(len(self.model_names))]
         return taskids
 
     # method to efficently grab correct subsections from 
@@ -88,13 +106,17 @@ class ResultHandling:
 
     def box_plot(self, boxes, labels, save=True, draw=False, figname=''):
         fig, ax = plt.subplots(figsize=(self.width, self.height))
+        #print(boxes)
+        #print(labels)
+
         ax.boxplot(boxes)
         ax.set_xlim(0.5, len(boxes) + 0.5)
         ax.set_xticklabels(labels,rotation=45, fontsize=self.box_label_size)
+        #plt.yticks(np.arange(0.5, 1.1, 0.1))
         plt.yticks(fontsize=self.box_label_size)
         if save:
             if figname != '':
-                plt.savefig(f'prepared_results/{figname}.png')
+                plt.savefig(f'prepared_results/{self.job}/{figname}.png')
         if draw:
             plt.show()
         else:

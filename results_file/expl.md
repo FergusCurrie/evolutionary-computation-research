@@ -12,7 +12,8 @@ bagboost = GP/BagGP/NicheGP/CCGP run across all datasets. (with appropriate gp p
 
 Running: 
 
-4083474 = new bagboost
+
+4083559 = new bagboost
 
 4083560 = fast bag new
 

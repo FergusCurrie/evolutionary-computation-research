@@ -53,7 +53,7 @@ def get_fast_dr_experiment():
         decision_fusion_func=majority_voting,
         params=bag_params,
         pred_func=GP_predict,
-        model_name = 'pcabag'
+        model_name = f'pcabag_d{NUMBER_OF_PCS}'
     )
 
     models = [bag_model_pca]
