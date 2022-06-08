@@ -1,0 +1,1 @@
+31 : ccgp , cleveland , {'max_depth': 5, 'pc': 0.6, 'pm': 0.4, 'ngen': 100, 'verbose': False, 't_size': 7, 'nspecies': 5, 'species_size': 100} 

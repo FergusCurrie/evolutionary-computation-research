@@ -7,14 +7,6 @@ bagboost = GP/BagGP/NicheGP/CCGP run across all datasets. (with appropriate gp p
 
 4082851 = FastGP multiclass , some terminated so needs to be rerun
 
-4082885 = MOGP run, final method failed (PFMOGP). Needs a partial re run. 
-
-
-Running: 
-
-
-4083559 = new bagboost
-
-4083560 = fast bag new
-
 4082937 = m3gp 
+
+4082885 = MOGP run, final method failed (PFMOGP). Needs a partial re run. 

@@ -18,7 +18,7 @@ from sklearn.decomposition import PCA
 def get_fast_dr_experiment():
     # name
 
-    NUMBER_OF_PCS = 2
+    NUMBER_OF_PCS = 4
 
     exp_name = "dr"
     # Datasets
