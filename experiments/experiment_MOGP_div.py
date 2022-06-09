@@ -23,8 +23,9 @@ def get_experiment__mogpdiv_experiment():
     exp_name = "divmogp_experiment"
 
     # Datasets
+    
     datasets = {}
-    for ds in ['cleveland', 'ionosphere', 'mammo_graphic', 'wisconsin_breast_cancer', 'australia', 'postop', 'spec']:
+    for ds in ['cleveland', 'ionosphere', 'mammo_graphic', 'wisconsin_breast_cancer', 'australia',  'postop','spec']:
         datasets[ds] = get_data(ds)
 
     # Metrics

@@ -7,7 +7,7 @@ from code.learners.EC.bagmogp import bag_mogp_member_generation
 sys.path.append("/")
 
 from model import Model
-from code.data_processing import get_data
+from code.data_processing import get_all_datasets, get_data
 from code.learners.EC.MOGP import gp_mo_member_generation
 from code.learners.EC.NCLMOGP import nclmo_member_generation
 from code.learners.EC.PFMOGP import pfmo_member_generation
@@ -24,9 +24,11 @@ def get_experiment__bagmogp():
     exp_name = "bagmogp"
 
     # Datasets
+    all_datasets = get_all_datasets()
     datasets = {}
-    for ds in ['cleveland', 'ionosphere', 'mammo_graphic', 'wisconsin_breast_cancer', 'australia', 'postop', 'spec']:
-        datasets[ds] = get_data(ds)
+
+    for d in all_datasets:
+        datasets[d] = get_data(d)
 
     # Metrics
     metrics = [multi_class_metric]
@@ -34,7 +36,8 @@ def get_experiment__bagmogp():
     # MODELS ###############################################################################################################
     
     # MOGP
-    bagMOGP_params_1 = {"p_size": 250, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 50, "verbose": False}
+    # 250 50 
+    bagMOGP_params_1 = {"p_size": 2, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 2, "verbose": False}
     bagMOGP_params = [bagMOGP_params_1]
     bagMOGP_model = Model(
         member_generation_func=bag_mogp_member_generation,
