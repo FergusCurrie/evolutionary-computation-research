@@ -9,6 +9,8 @@ import math
 import operator 
 import numpy as np
 import warnings
+
+from code.decision_fusion.voting import majority_voting
 warnings.simplefilter("ignore")
 
 
@@ -45,13 +47,9 @@ def get_stats():
     mstats.register("min", np.min)
     return mstats
 
-def single_predict(learner, x,unique_classes):
-    '''
-    does the unpacking here
-    '''
-    radius = 0.5 # size of the map prediction 
-    res = -1 # res will be 
-    z = learner(*x) # unpack
+def thresholding(z, x, unique_classes):
+    radius = 0.5
+    res = -1
     n_classes = len(unique_classes)
     lowest_threshold = 0.3 * n_classes * -1
     for i_class in range(n_classes):
@@ -64,6 +62,13 @@ def single_predict(learner, x,unique_classes):
 
     assert(res != -1)
     return res
+
+def single_predict(learner, x,unique_classes):
+    '''
+    does the unpacking here
+    '''
+    z = learner(*x) # unpack
+    return z
 
 
 def array_predict(learner, X):
@@ -86,7 +91,29 @@ def GP_predict(learner, X, n_classes):
     assert(type(learner) != list)
     result = []
     for x in X:
-        result.append(single_predict(learner,x, n_classes))
+        p = single_predict(learner,x, n_classes)
+        result.append(thresholding(p,x, n_classes))
+
     result = np.array(result)
     assert(result.shape[0] == X.shape[0])
     return np.array(result)
+
+
+def raw_bag_GP_predict(bag, X, n_classes):
+    """Same as above but instead the learner is a list of trees 
+
+    Args:
+        learner (_type_): _description_
+        X (_type_): (data, feat)
+        n_classes (_type_): _description_
+    """
+    dv = []
+    for tree in bag:
+        temp = []
+        for x in X:
+            p = single_predict(tree, x, n_classes)
+            temp.append(p)
+        dv.append(temp)
+    dv = np.array(dv) #  (1, data)
+    outer_vote = np.sum(dv, axis=0)
+    return outer_vote # (databpoitns )

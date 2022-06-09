@@ -9,3 +9,5 @@ class Learner:
     def predict(self, X : np.array, y : int) -> float:
         return self.pred_func(self.learner, X, y)
     
+    def get_function(self):
+        return self.learner

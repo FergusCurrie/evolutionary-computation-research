@@ -83,8 +83,8 @@ def gp_mo_member_generation(X, y, params, seed):
 
     # Stats
     mstats = tools.Statistics(lambda ind: ind.fitness.values)
-    mstats.register("avg", np.mean, axis=0)
-    mstats.register("min", np.min, axis=0)
+    #mstats.register("avg", np.mean, axis=0)
+    #mstats.register("min", np.min, axis=0)
     mstats.register("max", np.max, axis=0)
 
     logbook = tools.Logbook()

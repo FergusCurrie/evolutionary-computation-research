@@ -42,3 +42,16 @@ def weighted_voting(ypred : np.array, weights : np.array, binary=True) -> np.arr
         return binary_voting(ypred)
     return majority_voting(ypred)
 
+
+
+def winner_takes_all(ypred : np.array):
+    """_summary_
+
+    Args:
+        ypred (np.array): (n_learners, n_datapoints)
+
+    Returns:
+        _type_: _description_
+    """
+    return np.argmax(ypred, axis=0)
+
