@@ -18,26 +18,20 @@ from sklearn.decomposition import PCA
 def get_fast_dr_experiment():
     # name
 
-    NUMBER_OF_PCS = 4
 
     exp_name = "dr"
     # Datasets
     all_datasets = get_all_datasets()
-    datasets = {}
 
-    for d in all_datasets:
-        datasets[d] = get_data(d)
 
     # Create the PCA dataset. 
     pca_datastes = {}
-    for d in all_datasets:
-        X, y = datasets[d]
-        pca = PCA(n_components=NUMBER_OF_PCS)
-        Xt = pca.fit_transform(X)
-        pca_datastes[d] = (Xt, y)
-
-    datasets = None
-
+    for npcs in [1,2,3,4]:
+        for d in all_datasets:
+            X, y = get_data(d)
+            pca = PCA(n_components=npcs)
+            Xt = pca.fit_transform(X)
+            pca_datastes[f'{d}_{npcs}'] = (Xt, y)
 
     # Metrics
     metrics = [multi_class_metric]
@@ -53,7 +47,7 @@ def get_fast_dr_experiment():
         decision_fusion_func=majority_voting,
         params=bag_params,
         pred_func=GP_predict,
-        model_name = f'pcabag_d{NUMBER_OF_PCS}'
+        model_name = f'pcabag'
     )
 
     models = [bag_model_pca]

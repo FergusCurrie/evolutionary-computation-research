@@ -20,8 +20,9 @@ import random
 # MODELS ###############################################################################################################
 
 #xpr_name = 'fast_bagboost_experiment'
-xpr_name = 'bagmogp'
+xpr_name = 'dr'
 X = get_experiment(xpr_name)
+print(X['n_tasks'])
 #X = get_experiment('fast_bagboost_experiment')
 
 s = random.randint(0,9999)
