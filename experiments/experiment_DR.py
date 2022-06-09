@@ -39,6 +39,7 @@ def get_fast_dr_experiment():
     # MODELS ###############################################################################################################
     # BaggingGP
     # BaggingGP
+    # 500 20
     bag_params_1 = {"p_size": 500, "max_depth": 5, "pc": 0.6, "pm": 0.4, "ngen": 20, "verbose": False, "t_size": 7, 'ncycles':5, 'batch_size':100}
     bag_params = [bag_params_1]
     bag_model_pca = Model(
