@@ -1,1 +1,0 @@
-my_if(mul(mul(sub(protectedDiv(-1.4, -1.4), add(-1.4, -1.4)), mul(my_if(-1.4, -1.4, 6.5), add(-1.4, 2.75))), sub(sub(add(1.45, 1.45), sub(5.05, 4.95)), add(protectedDiv(-1.4, 2.75), protectedDiv(0.8, 1.75)))), my_if(sub(-1.4, 1.65), sub(ARG3, 1.7), sub(ARG3, 1.7)), my_if(sub(-1.4, 1.65), -1.4, sub(ARG3, 1.7)))
