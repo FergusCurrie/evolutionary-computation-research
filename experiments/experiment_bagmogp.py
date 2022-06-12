@@ -37,7 +37,7 @@ def get_experiment__bagmogp():
     
     # MOGP
     # 250 50 
-    bagMOGP_params_1 = {"p_size": 250, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 50, "verbose": False}
+    bagMOGP_params_1 = {"p_size": 500, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 50, "verbose": False}
     bagMOGP_params = [bagMOGP_params_1]
     bagMOGP_model = Model(
         member_generation_func=bag_mogp_member_generation,
