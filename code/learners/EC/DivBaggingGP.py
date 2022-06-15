@@ -45,7 +45,7 @@ def bagging_fitness_calculation(individual, toolbox, X, y, ensemble):
     delta = -np.inf
     for e2 in ensemble:
         d = difference(GP_predict(e1, X, np.unique(y)), GP_predict(e2, X, np.unique(y)))  # this uses the selection of the ensemble, think that is UCARP specific 
-        if d < delta:
+        if d > delta:
             delta = d
     if delta == 0:
         return -np.inf, 
@@ -128,6 +128,10 @@ def divbagging_member_generation(X, y, params, seed): # this is going to call th
     batch_size = params['batch_size']
     ensemble = []
     ensemble_strings = []
+
+    if batch_size == 'N':
+        batch_size = len(y)
+        params["batch_size"] = len(y)
 
     sum_history = np.ones((params['ngen'], 2))
     for c in range(ncycles):

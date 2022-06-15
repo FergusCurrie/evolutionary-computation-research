@@ -54,6 +54,8 @@ def m3gpbag_member_generation(X, y, params, seed): # this is going to call the i
     ensemble = []
     es = [] # strings 
     dfs = []
+    batch_size = len(y)
+    params["batch_size"] = len(y)
     for c in range(ncycles):
         # evolve the ensemble for this cycle
         idx = np.random.choice(np.arange(len(X)), batch_size, replace=True)

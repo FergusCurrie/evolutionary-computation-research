@@ -168,6 +168,8 @@ def gp_rf_bagging_member_generation(X, y, params, seed): # this is going to call
     ensemble_strings = []
 
     sum_history = np.ones((params['ngen'], 2))
+    batch_size = len(y)
+    params["batch_size"] = len(y)
     for c in range(ncycles):
         # evolve the ensemble for this cycle
         idx = np.random.choice(np.arange(len(X)), batch_size, replace=True)

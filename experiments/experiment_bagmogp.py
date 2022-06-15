@@ -45,14 +45,25 @@ def get_experiment__bagmogp():
         decision_fusion_func=winner_takes_all,
         params=bagMOGP_params,
         pred_func=raw_bag_GP_predict,
-        model_name='bagMOGP'
+        model_name='bagMOGP500'
+    )
+
+    bagMOGP_params_2 = {"p_size": 250, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 50, "verbose": False}
+    bagMOGP_params2 = [bagMOGP_params_2]
+    bagMOGP_model2 = Model(
+        member_generation_func=bag_mogp_member_generation,
+        member_selection_func=None, # offEEL
+        decision_fusion_func=winner_takes_all,
+        params=bagMOGP_params2,
+        pred_func=raw_bag_GP_predict,
+        model_name='bagMOGP250'
     )
 
 
 
 
     # Combine models into list
-    models = [bagMOGP_model]
+    models = [bagMOGP_model, bagMOGP_model2]
     ########################################################################################################################
 
     # Calculat number of tasks

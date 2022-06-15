@@ -90,7 +90,7 @@ def run(jobid : int, taskid : int, name : str, nseeds = 30):
         print(f'Run number {i}/{nseeds}  ... seed = {seed} of {dataset_name}')
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=seed, stratify=y) # NOTICE STRATIFICATION
-
+        print(y_test)
         # Member generation 
         start = time.time()
         model.member_generation(X_train, y_train, seed)

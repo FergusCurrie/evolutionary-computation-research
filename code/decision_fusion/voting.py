@@ -18,6 +18,7 @@ def binary_voting(ypred : np.array) -> np.array:
     return avg
 
 def majority_voting(ypred : np.array):
+    assert(ypred.shape[0] < ypred.shape[1])
     result = []
     for i in range(ypred.shape[1]):
         unique, counts = np.unique(ypred[:,i], return_counts=True, axis=0)

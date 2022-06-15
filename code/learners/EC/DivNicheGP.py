@@ -112,6 +112,8 @@ def divnichegp_member_generation(X,y, params, seed):
     logbook = tools.Logbook()
     logbook.header = ['gen', 'nevals'] + (mstats.fields if mstats else [])
     df_data=[]
+    batch_size = len(y)
+    params["batch_size"] = len(y)
     # Generation 
     for gen in range(1, ngen + 1):
         # First take a sample from training 

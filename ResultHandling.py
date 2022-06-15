@@ -119,7 +119,7 @@ class ResultHandling:
                 plt.savefig(f'prepared_results/{self.job}/{figname}.png')
         if draw:
             plt.show()
-        else:
+        else:  
             plt.close()
 
     def get_model_vs_dataset_dataframe(self, training) -> pd.DataFrame:
