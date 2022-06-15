@@ -30,7 +30,7 @@ def get_experiment_bagboost_experiment():
     metrics = [multi_class_metric]
 
     # MODELS ###############################################################################################################
-    # GP
+    '''    # GP
     GP_params_1 = {"p_size": 500, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 100, "verbose": False, "t_size": 7}
 
     GP_params = [GP_params_1]
@@ -41,7 +41,7 @@ def get_experiment_bagboost_experiment():
         params=GP_params,
         pred_func=GP_predict,
         model_name='GP'
-    )
+    )'''
     
     # BaggingGP
     bag_params_1 = {"p_size": 500, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 20, "verbose": False, "t_size": 7, 'ncycles':5, 'batch_size':'N'}
@@ -82,7 +82,7 @@ def get_experiment_bagboost_experiment():
 
     # CCGP
     ccgp_params_1 = {
-        "max_depth": 5, 
+        "max_depth": 8, 
         "pc": 0.6, 
         "pm": 0.4, 
         "ngen": 100,  # 10
@@ -102,7 +102,7 @@ def get_experiment_bagboost_experiment():
 
 
     # Combine models into list
-    models = [GP_model, bag_model, nich_model, ccgp_model]
+    models = [bag_model, nich_model, ccgp_model]
     #models = [bag_model]
 
     ########################################################################################################################
