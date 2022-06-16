@@ -66,7 +66,7 @@ def m3gpbag_member_generation(X, y, params, seed): # this is going to call the i
         Tr_X = pd.DataFrame(data=Xsubset)    # frame for x
         Tr_Y = pd.DataFrame(data=ysubset)[0] # series for y
         
-        m3gp = M3GP(population_size = params['p_size'], max_generation = params['p_size'], verbose=False, max_depth = params['max_depth'])
+        m3gp = M3GP(population_size = params['p_size'], max_generation = params['p_size'], verbose=False, limit_depth = params['max_depth'])
         m3gp.fit(Tr_X, Tr_Y)
 
         best_individual = m3gp.getBestIndividual()
