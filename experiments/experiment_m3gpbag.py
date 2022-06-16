@@ -48,7 +48,7 @@ def get_m3gpbag_experiment():
     # MODELS ###############################################################################################################
     
     # BaggingGP
-    m3gpbag_params_1 = {"p_size": 500, "max_depth": 5, "pc": 0.6, "pm": 0.4, "ngen": 20, "verbose": False, "t_size": 7, 'ncycles':5, 'batch_size':100}
+    m3gpbag_params_1 = {"p_size": 500, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 20, "verbose": False, "t_size": 7, 'ncycles':5, 'batch_size':'N'}
     m3gpbag_params = [m3gpbag_params_1]
     m3gpbag_model = Model(
         member_generation_func=m3gpbag_member_generation,

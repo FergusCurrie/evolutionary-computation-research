@@ -20,7 +20,7 @@ import random
 # MODELS ###############################################################################################################
 
 #xpr_name = 'fast_bagboost_experiment'
-xpr_name = 'parameter_search_bag'
+xpr_name = 'full_bag'
 X = get_experiment(xpr_name)
 print(X['n_tasks'])
 #X = get_experiment('fast_bagboost_experiment')

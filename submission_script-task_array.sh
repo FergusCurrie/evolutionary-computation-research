@@ -15,6 +15,7 @@
 #
 # Check we have somewhere to work now and if we don't, exit nicely.
 #
+
 if [ -d /local/tmp/currieferg/$JOB_ID.$SGE_TASK_ID ]; then
         cd /local/tmp/currieferg/$JOB_ID.$SGE_TASK_ID
 else
@@ -48,7 +49,7 @@ ls -ltr /local/tmp/
 echo ==/VOL/GRID-SOLAR==
 ls -l /vol/grid-solar/sgeusers/
 #
-# OK, where are we starting from and what's the environment we're in
+# OK, where are we starting from and what's the environment we're in§   
 #
 echo ==RUN HOME==
 pwd
@@ -78,7 +79,7 @@ fi
 # 
 # Note that we need the full path to this utility, as it is not on the PATH
 #
-python grid_run_a_task_wrapper.py $JOB_ID $SGE_TASK_ID
+python grid_run_a_task_wrapper.py $JOB_ID $SGE_TASK_ID $1
 #
 echo ==AND NOW, HAVING DONE SOMTHING USEFUL AND CREATED SOME OUTPUT==
 ls -la

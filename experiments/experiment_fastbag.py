@@ -27,7 +27,7 @@ def get_fast_baggp_experiment():
     metrics = [multi_class_metric]
 
     # Fast bag gp with lin alg norm
-    fast_bag_params_1 = {"p_size": 500, "max_depth": 5, "pc": 0.6, "pm": 0.4, "ngen": 20, "verbose": False, "t_size": 7, 'ncycles':5, 'batch_size':100, 'use_hamming':False}
+    fast_bag_params_1 = {"p_size": 500, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 20, "verbose": False, "t_size": 7, 'ncycles':5, 'batch_size':'N', 'use_hamming':False}
     #fast_bag_params_1 = {"p_size": 5, "max_depth": 5, "pc": 0.6, "pm": 0.4, "ngen": 2, "verbose": False, "t_size": 7, 'ncycles':5, 'batch_size':100, 'use_hamming':False}
     fast_bag_params= [fast_bag_params_1]
     fast_bag_model1 = Model(
@@ -40,7 +40,7 @@ def get_fast_baggp_experiment():
     )
 
     # Fast bag gp with hamming distance
-    fast_bag_params_1 = {"p_size": 500, "max_depth": 5, "pc": 0.6, "pm": 0.4, "ngen": 20, "verbose": False, "t_size": 7, 'ncycles':5, 'batch_size':100, 'use_hamming':True}
+    fast_bag_params_1 = {"p_size": 500, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 20, "verbose": False, "t_size": 7, 'ncycles':5, 'batch_size':'N', 'use_hamming':True}
     #fast_bag_params_1 = {"p_size": 5, "max_depth": 5, "pc": 0.6, "pm": 0.4, "ngen": 2, "verbose": False, "t_size": 7, 'ncycles':5, 'batch_size':100, 'use_hamming':True}
     fast_bag_params= [fast_bag_params_1]
     fast_bag_model2 = Model(

@@ -43,7 +43,7 @@ def get_experiment(name : str) -> dict:
         return get_fast_dr_experiment()
     if name == 'bagmogp':
         return get_experiment__bagmogp()
-    if name == 'parameter_search_bag':
+    if name == 'full_bag':
         return get_experiment_full_bag()
     print('Experiment name error ')
     assert(1 == 0) # fail

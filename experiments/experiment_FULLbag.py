@@ -36,7 +36,7 @@ def m3gp_predict(learner, X, n_classes):
 
 
 def get_bag_model_1():
-    bag_params_1 = {"p_size": 500, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 20, "verbose": False, "t_size": 7, 'ncycles':5}
+    bag_params_1 = {"p_size": 5, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 20, "verbose": False, "t_size": 7, 'ncycles':5}
     bag_params = [bag_params_1]
     bag_model = Model(
         member_generation_func=divbagging_member_generation,
@@ -47,65 +47,6 @@ def get_bag_model_1():
         model_name = 'baggp'
     )
     return bag_model
-
-def get_niche_model():# NichingGP
-    nich_params_1 = {
-        "p_size": 500,  # 500
-        "max_depth": 8, 
-        "pc": 0.6, 
-        "pm": 0.4, 
-        "ngen": 100,  # 100
-        "verbose": False, 
-        "t_size": 7, 
-        'batch_size':'N',# bs?
-        'radius': 0.05, # radius of the niche
-        'capacity': 1 # number of winners in a niche 
-    }
-    nich_params = [nich_params_1]
-    nich_model = Model(
-        member_generation_func=divnichegp_member_generation,
-        member_selection_func=greedyEnsemble, # offEEl
-        decision_fusion_func=majority_voting,
-        params=nich_params,
-        pred_func=GP_predict,
-        model_name = 'nichgp'
-    )
-    return nich_model
-
-
-def get_ccgp_model(): # CCGP
-    ccgp_params_1 = {
-        "max_depth": 8, 
-        "pc": 0.6, 
-        "pm": 0.4, 
-        "ngen": 100,  # 10
-        "verbose": False, 
-        "t_size": 7,
-        "nspecies": 5,
-        'species_size': 'N',
-    }
-    ccgp_model = Model(
-        member_generation_func=ccgp_member_generation,
-        member_selection_func=None, # offEEl
-        decision_fusion_func=majority_voting,
-        params=[ccgp_params_1],
-        pred_func=GP_predict,
-        model_name = 'ccgp'
-    )
-    return ccgp_model
-
-def get_m3gp():
-    m3gpbag_params_1 = {"p_size": 500, "max_depth": 5, "pc": 0.6, "pm": 0.4, "ngen": 20, "verbose": False, "t_size": 7, 'ncycles':5, 'batch_size':100}
-    m3gpbag_params = [m3gpbag_params_1]
-    m3gpbag_model = Model(
-        member_generation_func=m3gpbag_member_generation,
-        member_selection_func=None, # offEEl
-        decision_fusion_func=majority_voting,
-        params=m3gpbag_params,
-        pred_func=m3gp_predict,
-        model_name = 'm3gp_bag'
-    )
-    return m3gpbag_model
 
 def get_experiment_full_bag():
     # nam
@@ -124,9 +65,6 @@ def get_experiment_full_bag():
     # MODELS ###############################################################################################################
     # BaggingGP
     models.append(get_bag_model_1())
-    models.append(get_niche_model())
-    models.append(get_ccgp_model())
-    
 
 
     ########################################################################################################################
