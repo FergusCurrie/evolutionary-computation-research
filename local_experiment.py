@@ -15,12 +15,13 @@ from code.learners.EC.CCGP import ccgp_member_generation
 from code.learners.EC.NCLMOGP import nclmo_member_generation
 from code.learners.EC.PFMOGP import pfmo_member_generation
 import random 
+import sys
 
 
 # MODELS ###############################################################################################################
 
 #xpr_name = 'fast_bagboost_experiment'
-xpr_name = 'full_bag'
+xpr_name = sys.argv[1]
 X = get_experiment(xpr_name)
 print(X['n_tasks'])
 #X = get_experiment('fast_bagboost_experiment')

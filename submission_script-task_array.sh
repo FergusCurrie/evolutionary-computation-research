@@ -16,6 +16,8 @@
 # Check we have somewhere to work now and if we don't, exit nicely.
 #
 
+echo $1
+
 if [ -d /local/tmp/currieferg/$JOB_ID.$SGE_TASK_ID ]; then
         cd /local/tmp/currieferg/$JOB_ID.$SGE_TASK_ID
 else
