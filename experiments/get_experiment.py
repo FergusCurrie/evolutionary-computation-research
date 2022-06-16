@@ -4,7 +4,6 @@ Wrapper for getting an experiment dictionary from experiment name
 
 from typing import Callable
 from experiments.experiment_DR import get_fast_dr_experiment
-from experiments.experiment_FULLbag import get_experiment_full_bag
 from experiments.experiment_bagboost import get_experiment_bagboost_experiment
 
 from experiments.experiment_MOGP_div import get_experiment__mogpdiv_experiment
@@ -15,7 +14,7 @@ from experiments.experiment_m3gpbag import get_m3gpbag_experiment
 
 
 def is_experiment(name : str) -> bool:
-    if name in ['bagboost_experiment', 'divmogp_experiment', 'fastbag','m3gp_bag', 'dr', 'bagmogp', 'full_bag']:
+    if name in ['bagboost_experiment', 'divmogp_experiment', 'fastbag','m3gp_bag', 'dr', 'bagmogp']:
         return True
     print(f'\n\n={name}=\n\n')
     return False
@@ -43,7 +42,5 @@ def get_experiment(name : str) -> dict:
         return get_fast_dr_experiment()
     if name == 'bagmogp':
         return get_experiment__bagmogp()
-    if name == 'full_bag':
-        return get_experiment_full_bag()
     print('Experiment name error ')
     assert(1 == 0) # fail
