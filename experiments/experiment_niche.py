@@ -17,55 +17,29 @@ from code.learners.EC.deap_extra import GP_predict
 from code.metrics.classification_metrics import binary_metric, multi_class_metric
 from code.member_selection.offEEL import offEEL
 
-def get_experiment_bagboost_experiment():
+def get_experiment_niche():
     # nam
-    exp_name = "bagboost_experiment"
+    exp_name = "niche"
     # print(datasets.keys())
     all_datasets = get_all_datasets()
     datasets = {}
-    for d in all_datasets:
-        datasets[d] = get_data(d)
+    datasets['cleveland'] = get_data('cleveland')
 
     # Metrics
     metrics = [multi_class_metric]
 
-    p_size = 2
+    # p_size = 2
 
     # MODELS ###############################################################################################################
-    # GP
-    GP_params_1 = {"p_size": 500, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 100, "verbose": False, "t_size": 7}
-
-    GP_params = [GP_params_1]
-    GP_model = Model(
-        member_generation_func=gp_member_generation,
-        member_selection_func=None, # offEEl
-        decision_fusion_func=majority_voting,
-        params=GP_params,
-        pred_func=GP_predict,
-        model_name='GP'
-    )
-    
-    # BaggingGP
-    bag_params_1 = {"p_size": p_size, "max_depth": 5, "pc": 0.6, "pm": 0.4, "ngen": 20, "verbose": False, "t_size": 7, 'ncycles':5, 'batch_size':100}
-    bag_params = [bag_params_1]
-    bag_model = Model(
-        member_generation_func=divbagging_member_generation,
-        member_selection_func=None, # offEEl
-        decision_fusion_func=majority_voting,
-        params=bag_params,
-        pred_func=GP_predict,
-        model_name = 'baggp'
-    )
-
 
     # NichingGP
     nich_params_1 = {
-        "p_size": p_size,  # 500
+        "p_size": 500,  # 500
         "max_depth": 5, 
         "pc": 0.6, 
         "pm": 0.4, 
         "ngen": 100,  # 100
-        "verbose": False, 
+        "verbose": True, 
         "t_size": 7, 
         'batch_size':100,# bs?
         'radius': 0.05, # radius of the niche
@@ -82,29 +56,9 @@ def get_experiment_bagboost_experiment():
     )
 
 
-    # CCGP
-    ccgp_params_1 = {
-        "max_depth": 5, 
-        "pc": 0.6, 
-        "pm": 0.4, 
-        "ngen": 100,  # 10
-        "verbose": False, 
-        "t_size": 7,
-        "nspecies": 5,
-        'species_size': p_size,
-    }
-    ccgp_model = Model(
-        member_generation_func=ccgp_member_generation,
-        member_selection_func=None, # offEEl
-        decision_fusion_func=majority_voting,
-        params=[ccgp_params_1],
-        pred_func=GP_predict,
-        model_name = 'ccgp'
-    )
-
 
     # Combine models into list
-    models = [GP_model, bag_model, nich_model, ccgp_model]
+    models = [nich_model]
     #models = [bag_model]
 
     ########################################################################################################################

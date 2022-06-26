@@ -47,7 +47,7 @@ def get_experiment__bagmogp():
         pred_func=raw_bag_GP_predict,
         model_name='bagMOGP500'
     )
-
+    '''
     bagMOGP_params_2 = {"p_size": 250, "max_depth": 8, "pc": 0.6, "pm": 0.4, "ngen": 50, "verbose": False}
     bagMOGP_params2 = [bagMOGP_params_2]
     bagMOGP_model2 = Model(
@@ -57,13 +57,13 @@ def get_experiment__bagmogp():
         params=bagMOGP_params2,
         pred_func=raw_bag_GP_predict,
         model_name='bagMOGP250'
-    )
+    )'''
 
 
 
 
     # Combine models into list
-    models = [bagMOGP_model, bagMOGP_model2]
+    models = [bagMOGP_model] #, bagMOGP_model2]
     ########################################################################################################################
 
     # Calculat number of tasks

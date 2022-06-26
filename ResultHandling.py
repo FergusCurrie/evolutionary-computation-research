@@ -18,7 +18,7 @@ from experiments.get_experiment import get_experiment
 class ResultHandling:
     def __init__(self, job, xp_name, height=10, width=10, box_label_size=15, target_dir='results_file') -> None:
         self.job = job
-        self.jobid = self.get_jobname_to_id()
+        self.jobid = self.get_jobname_to_id(job)
         self.box_label_size = box_label_size
         self.width = width
         self.height = height
@@ -34,15 +34,22 @@ class ResultHandling:
         self.make_taskid_to_string() # dictionary for task_id -> 'model_dataset' as a string
         self.load_data() # load data into a dictionary mapping task id -> dataframe of resluts
 
-    def get_jobname_to_id(self):
+    def get_jobname_to_id(self, name):
         dict = {
-            'bagboost' : '4082125',
+            'bagboost' : '4083559',
             'fastbag_ham' : '4083560',
-            'ORMOGP' : '4082885'
+            'ORMOGP' : '4082885',
+            'bagmogp' : '4083783',
+            'm3gp' : '4082937',
+            'pca' : '4083806',
+            'fastbag_ham_new' : '4084319',
+            'm3gpbag' : '4082937',
+            'mogp500' : '4083864'
         }
-        if self.job in dict.keys():
-            return dict[self.job]
-        return self.job
+
+        if name in dict.keys():
+            return dict[name]
+        return name
  
     def make_taskid_to_string(self):
         """Generates a dictionry of taskid -> str('model_dataset')
@@ -98,13 +105,19 @@ class ResultHandling:
         return x
     
     def get_cond_data(self, mgen, train, dataset_name= 'all', model_name='all', col='full_acc'):
+        if dataset_name not in self.datasets and not (dataset_name == 'all'):
+
+            return np.array([])
         dataset_taskids = self.get_task_ids_of_dataset(dataset_name)
         model_taskids = self.get_taskid_by_model(model_name)
+        #print(dataset_taskids)
+        #print(model_taskids)
+        #print(self.data.keys())
         X = np.array([self.get_data(z, member_generation=mgen, training=train)['full_acc'] for z in self.data.keys() if z in dataset_taskids and z in model_taskids])
         X = X.flatten()
         return X
 
-    def box_plot(self, boxes, labels, save=True, draw=False, figname=''):
+    '''def box_plot(self, boxes, labels, save=True, draw=False, figname=''):
         fig, ax = plt.subplots(figsize=(self.width, self.height))
         #print(boxes)
         #print(labels)
@@ -120,7 +133,7 @@ class ResultHandling:
         if draw:
             plt.show()
         else:  
-            plt.close()
+            plt.close()'''
 
     def get_model_vs_dataset_dataframe(self, training) -> pd.DataFrame:
         assert(type(training)==bool)
@@ -135,12 +148,4 @@ class ResultHandling:
         df.index = self.datasets
         return df
 
-    def wilcoxon_test(self):
-        tests = []
-        X = [self.get_cond_data(mgen=False, train=False, dataset_name='all', model_name=model) for model in self.model_names]
-        for i in range(len(X)):
-            for j in range(len(X)):
-                if i != j and i > j: # No statistical comparison with itself
-                    tests.append([self.model_names[i],self.model_names[j],ranksums(x=X[i], y=X[j], alternative='less')])
-        for t in tests:
-            print(t)
+    

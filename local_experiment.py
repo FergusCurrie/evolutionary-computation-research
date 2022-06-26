@@ -22,7 +22,9 @@ import sys
 
 #xpr_name = 'fast_bagboost_experiment'
 xpr_name = sys.argv[1]
+print(xpr_name)
 X = get_experiment(xpr_name)
+print(X)
 print(X['n_tasks'])
 #X = get_experiment('fast_bagboost_experiment')
 

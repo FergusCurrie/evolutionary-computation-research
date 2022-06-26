@@ -1,1 +1,0 @@
-16 : pcabag , wisconsin_breast_cancer_2 , {'p_size': 500, 'max_depth': 8, 'pc': 0.6, 'pm': 0.4, 'ngen': 20, 'verbose': False, 't_size': 7, 'ncycles': 5, 'batch_size': 'N'} 
